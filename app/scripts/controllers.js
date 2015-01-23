@@ -6,18 +6,17 @@ angular.module('Moodtracker.controllers', [])
 // $scope.projectsList = $firebase(new Firebase("https://mood-track.firebaseio.com/projects"));
   
   $scope.name = {text: null};
-  $scope.scale = 0;
+  $scope.scale = {num:0};
   $scope.comment ={text:null};
 
   $scope.moods = $firebase(new Firebase("https://mood-track.firebaseio.com/Moods"));
 
   $scope.saveMood = function() {
 
-    console.log($scope.name.text);
-        // if ($scope.name === '') {
-        //     return;
-        // }
-    $scope.moods.$push({name: $scope.name, scale: $scope.scale, comment: $scope.comment.text});
+        if ($scope.name === '') {
+            return;
+        }
+    $scope.moods.$push({name: $scope.name.text, scale: $scope.scale.num, comment: $scope.comment.text});
 
   }
 
