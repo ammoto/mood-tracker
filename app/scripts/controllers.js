@@ -3,27 +3,70 @@ angular.module('Moodtracker.controllers', [])
 
 .controller('DashCtrl', function($scope,  $firebase) {
 
-// $scope.projectsList = $firebase(new Firebase("https://mood-track.firebaseio.com/projects"));
-  
-  $scope.name = {text: null};
-  $scope.scale = {num:0};
-  $scope.comment ={text:null};
+  $scope.first = {text: null};
+  $scope.last = {text:null};
+  $scope.email ={text:null};
 
-  $scope.moods = $firebase(new Firebase("https://mood-track.firebaseio.com/Moods"));
+  // $scope.moods = $firebase(new Firebase("https://mood-track.firebaseio.com/Moods"));
 
-  $scope.saveMood = function() {
+  $scope.signUp = function() {
 
-        if ($scope.name === '') {
+        if ($scope.name.text === '') {
             return;
         }
+         if ($scope.last.text === '') {
+            return;
+        }
+        if ($scope.email.text === '') {
+            return;
+        }
+
     $scope.moods.$push({name: $scope.name.text, scale: $scope.scale.num, comment: $scope.comment.text});
 
   }
 
 })
 
-.controller('FriendsCtrl', function($scope, Friends) {
-  $scope.friends = Friends.all();
+.controller('MoodEntryCtrl', function($scope, $firebase) {
+
+$scope.date = new Date();
+
+
+  $scope.name = {text: null};
+  $scope.scale = {num:0};
+  $scope.comment ={text:null};
+
+
+  $scope.moods = $firebase(new Firebase("https://mood-track.firebaseio.com/Moods"));
+
+  $scope.saveMood = function() {
+
+        if ($scope.name.text === '') {
+            return;
+        }
+    $scope.moods.$push({name: $scope.name.text, scale: $scope.scale.num, comment: $scope.comment.text, date:$scope.date});
+
+  }
+})
+
+.controller('DataCtrl', function($scope, $firebase) {
+
+
+  // $scope.name = {text: null};
+  // $scope.scale = {num:0};
+  // $scope.comment ={text:null};
+  // $scope.currentDate =  new time.Date();
+
+  // $scope.moods = $firebase(new Firebase("https://mood-track.firebaseio.com/Moods"));
+
+  // $scope.saveMood = function() {
+
+  //       if ($scope.name.text === '') {
+  //           return;
+  //       }
+  //   $scope.moods.$push({name: $scope.name.text, scale: $scope.scale.num, comment: $scope.comment.text});
+
+  // }
 })
 
 .controller('FriendDetailCtrl', function($scope, $stateParams, Friends) {

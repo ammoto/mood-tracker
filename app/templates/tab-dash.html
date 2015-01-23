@@ -1,25 +1,27 @@
-<ion-view title="Dashboard">
+<ion-view >
     <ion-content class="has-header padding">
         <h1>Mood Tracker</h1>
-<form method="get" ng-submit ='saveMood()'>
-        <div class="list">
-            <label class="item item-input">
-                <input type="text" placeholder="Your Mood" ng-model='name.text'>
-            </label>
-            <div class="item range range-positive">
-                <i class="icon ion-ios7-cloud"></i>
-                <input type="range" name="scale" min="0" max="10" value="5" ng-model='scale.num'>
-                <i class="icon ion-ios7-sunny-outline"></i>
-            </div>
-
-            <label class="item item-input">
-                <input type="text" placeholder="Comments" ng-model='comment.text'>
-            </label>
-            <button class="button button-energized" type='submit'>
-                Submit your Mood!
-            </button>
-
-        </div>
+        <div class="bar bar-header bar-calm">
+  <h1 class="title">Welcome to Mood Tracker!</h1>
+</div>
+<form method="get" ng-submit ='signUp()'>
+      <div class="list">
+  <label class="item item-input item-stacked-label">
+    <span class="input-label">First Name</span>
+    <input type="text" placeholder="John" ng-model='first.text'>
+  </label>
+  <label class="item item-input item-stacked-label">
+    <span class="input-label">Last Name</span>
+    <input type="text" placeholder="Smith" ng-model='last.text'>
+  </label>
+  <label class="item item-input item-stacked-label">
+    <span class="input-label">Email</span>
+    <input type="text" placeholder="john@smith.com" ng-model='email.text'>
+  </label>
+    <button class="button button-energized" type='submit'>
+                    Sign up!
+                </button>
+</div>
       </form>
 
     </ion-content>

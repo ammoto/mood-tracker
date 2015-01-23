@@ -49,15 +49,26 @@ angular.module('Moodtracker', ['ionic', 'config', 'firebase','Moodtracker.contro
       }
     })
 
-    .state('tab.friends', {
-      url: '/friends',
+    .state('tab.moodentry', {
+      url: '/entry',
       views: {
-        'tab-friends': {
-          templateUrl: 'templates/tab-friends.html',
-          controller: 'FriendsCtrl'
+        'tab-entry': {
+          templateUrl: 'templates/tab-moodentry.html',
+          controller: 'MoodEntryCtrl'
         }
       }
     })
+
+    .state('tab.data', {
+      url: '/data',
+      views: {
+        'tab-data': {
+          templateUrl: 'templates/tab-data.html',
+          controller: 'DataCtrl'
+        }
+      }
+    })
+
     .state('tab.friend-detail', {
       url: '/friend/:friendId',
       views: {
