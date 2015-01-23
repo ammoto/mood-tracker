@@ -2,11 +2,17 @@
   "name": "Moodtracker",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "angularfire": "^0.9.1",
+    "d3": "^3.5.3",
+    "firebase": "^2.1.1",
+    "google-maps": "^2.1.1"
+  },
   "devDependencies": {
     "grunt": "~0.4.1",
     "glob": "~4.0.5",
     "grunt-autoprefixer": "~0.4.0",
+        "firebase": "^2.1.1",
     "grunt-wiredep": "^1.7.0",
     "ionic": "^1.2.7",
     "grunt-concurrent": "~0.4.1",
