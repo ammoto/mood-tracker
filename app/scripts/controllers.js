@@ -32,11 +32,6 @@ angular.module('Moodtracker.controllers', [])
 $scope.date = new Date();
 
 
-  $scope.name = {text: null};
-  $scope.scale = {num:0};
-  $scope.comment ={text:null};
-
-
   $scope.moods = $firebase(new Firebase("https://mood-track.firebaseio.com/Moods"));
 
   $scope.saveMood = function() {
@@ -51,6 +46,13 @@ $scope.date = new Date();
 
 .controller('DataCtrl', function($scope, $firebase) {
 
+   $scope.greeting = "Resize the page to see the re-rendering";
+    $scope.data = [
+      {name: "Greg", score: 98},
+      {name: "Ari", score: 96},
+      {name: 'Q', score: 75},
+      {name: "Loser", score: 48}
+    ];
 
   // $scope.name = {text: null};
   // $scope.scale = {num:0};
@@ -67,6 +69,10 @@ $scope.date = new Date();
   //   $scope.moods.$push({name: $scope.name.text, scale: $scope.scale.num, comment: $scope.comment.text});
 
   // }
+
+
+
+
 })
 
 .controller('FriendDetailCtrl', function($scope, $stateParams, Friends) {

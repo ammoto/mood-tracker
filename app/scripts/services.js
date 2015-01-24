@@ -24,4 +24,6 @@ angular.module('Moodtracker.services', [])
       return friends[friendId];
     }
   };
-});
+})
+
+
