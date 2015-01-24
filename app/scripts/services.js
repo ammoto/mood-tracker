@@ -26,4 +26,17 @@ angular.module('Moodtracker.services', [])
   };
 })
 
+// .factory("ItemModel", function($rootScope,$firebase) {
 
+// var refMoods = new Firebase("https://mood-track.firebaseio.com/Moods");
+// var scope = $rootScope.$new();
+// scope.moods = [];
+// $firebase(refMoods,scope,'moods');
+// return scope;
+
+//   // var scope = $rootScope.$new(),
+//   //     url = 'https://mood-track.firebaseio.com/Moods';
+//   // scope.items = [];
+//   // var promise = $firebase(new Firebase(url).child('Moods'), scope, 'items');
+//   // return scope;
+// })
