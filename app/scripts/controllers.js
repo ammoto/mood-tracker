@@ -66,23 +66,30 @@ angular.module('Moodtracker.controllers', [])
 
     var sync = $firebase(new Firebase("https://mood-track.firebaseio.com/Moods"));
 
-    $scope.data = sync.$asObject()
+    $scope.data1 = sync.$asArray();
+    $scope.data2 = [];
+
+    $scope.filterData = function () {
+    $scope.data = $scope.data1.map(function (e) {
+        return {name: e["name"], score: parseInt(e["scale"])};
+    })
+   }
 
     $scope.greeting = "Resize the page to see the re-rendering";
 
-    $scope.data = [{
-        name: "Greg",
-        score: 98
-    }, {
-        name: "Ari",
-        score: 96
-    }, {
-        name: 'Q',
-        score: 75
-    }, {
-        name: "Loser",
-        score: 48
-    }];
+    // $scope.data = [{
+    //     name: "Greg",
+    //     score: 9
+    // }, {
+    //     name: "Ari",
+    //     score: 9
+    // }, {
+    //     name: 'Q',
+    //     score: 7
+    // }, {
+    //     name: "Loser",
+    //     score: 4
+    // }];
 
     $scope.onClick = function(item) {
         alert('clicked!');
