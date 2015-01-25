@@ -6,7 +6,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('Moodtracker', ['ionic', 'config', 'Moodtracker.controllers', 'Moodtracker.services'])
+angular.module('Moodtracker', ['ionic','config','firebase','d3','Moodtracker.controllers','Moodtracker.services', 'Moodtracker.directives'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -49,15 +49,26 @@ angular.module('Moodtracker', ['ionic', 'config', 'Moodtracker.controllers', 'Mo
       }
     })
 
-    .state('tab.friends', {
-      url: '/friends',
+    .state('tab.moodentry', {
+      url: '/entry',
       views: {
-        'tab-friends': {
-          templateUrl: 'templates/tab-friends.html',
-          controller: 'FriendsCtrl'
+        'tab-entry': {
+          templateUrl: 'templates/tab-moodentry.html',
+          controller: 'MoodEntryCtrl'
         }
       }
     })
+
+    .state('tab.data', {
+      url: '/data',
+      views: {
+        'tab-data': {
+          templateUrl: 'templates/tab-data.html',
+          controller: 'DataCtrl'
+        }
+      }
+    })
+
     .state('tab.friend-detail', {
       url: '/friend/:friendId',
       views: {
