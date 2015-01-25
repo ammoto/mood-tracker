@@ -6,7 +6,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('Moodtracker', ['ionic','config','firebase','d3','Moodtracker.controllers','Moodtracker.services', 'Moodtracker.directives'])
+angular.module('Moodtracker', ['ionic','config','firebase','d3','uiGmapgoogle-maps','Moodtracker.controllers','Moodtracker.services', 'Moodtracker.directives'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -20,6 +20,14 @@ angular.module('Moodtracker', ['ionic','config','firebase','d3','Moodtracker.con
       StatusBar.styleDefault();
     }
   });
+})
+.config(function(uiGmapGoogleMapApiProvider) {
+    uiGmapGoogleMapApiProvider.configure({
+        //    key: 'your api key',
+        key:'AIzaSyAio9PTakspJUDRJkVFzLe_Dx33q9qsdS4',
+        v: '3.17',
+        libraries: 'weather,geometry,visualization'
+    })
 })
 
 .config(function($stateProvider, $urlRouterProvider) {

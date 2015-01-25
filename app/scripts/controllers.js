@@ -88,12 +88,15 @@ angular.module('Moodtracker.controllers', [])
 
 
 // DATA CHARTS
-.controller('DataCtrl', function($scope, $firebase, $ionicModal) {
+
+
+
+.controller('DataCtrl', function($scope, $firebase, $ionicModal, uiGmapGoogleMapApi, $ionicLoading, $compile) {
 
     var sync = $firebase(new Firebase("https://mood-track.firebaseio.com/Moods"));
-
     $scope.rawdata = sync.$asArray();
     $scope.data2 = [];
+
     //RETRIEVE MOOD DATA FOR TODAY
     $scope.getTodayData = function() {
         var today = new Date().toISOString();
@@ -114,6 +117,7 @@ angular.module('Moodtracker.controllers', [])
 
                 return {
                     name: time,
+                    date: today,
                     score: parseInt(e["scale"]),
                     mood: e["name"],
                     color: color,
@@ -154,45 +158,69 @@ angular.module('Moodtracker.controllers', [])
         })
     }
 
-     $ionicModal.fromTemplateUrl('my-modal.html', {
-                scope: $scope,
-                animation: 'slide-in-up'
-            }).then(function(modal) {
-                console.log('modal loaded')
-                $scope.modal = modal;
-            });
-            $scope.openModal = function() {
-                $scope.modal.show();
-            };
-            $scope.closeModal = function() {
-                $scope.modal.hide();
-            };
-            //Cleanup the modal when we're done with it!
-            $scope.$on('$destroy', function() {
-                $scope.modal.remove();
-            });
-            // Execute action on hide modal
-            $scope.$on('modal.hidden', function() {
-                // Execute action
-            });
-            // Execute action on remove modal
-            $scope.$on('modal.removed', function() {
-                // Execute action
-            });
+    //MODAL SETUP
+    $ionicModal.fromTemplateUrl('my-modal.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function(modal) {
+        console.log('modal loaded')
+        $scope.modal = modal;
+    });
+    $scope.openModal = function() {
+        $scope.modal.show();
+    };
+    $scope.closeModal = function() {
+        $scope.modal.hide();
+    };
+    //Cleanup the modal when we're done with it!
+    $scope.$on('$destroy', function() {
+        $scope.modal.remove();
+    });
+    // Execute action on hide modal
+    $scope.$on('modal.hidden', function() {
+        // Execute action
+    });
+    // Execute action on remove modal
+    $scope.$on('modal.removed', function() {
+        // Execute action
+    });
 
 
+
+
+
+    //ONCLICK FUNCTION
     $scope.onClick = function(item) {
 
         $scope.$apply(function() {
             if (!$scope.showDetailPanel)
                 $scope.showDetailPanel = true;
-            $scope.detailMood = item.name;
-            $scope.detailDate = item.date;
-            $scope.detailTime = item.time;
+            $scope.detailMood = item.mood;
+            $scope.detailDate = item.date ;
+            $scope.detailTime = item.name;
             $scope.detailComment = item.comment;
-            $scope.detailLocation = item.latLong;
-            $scope.modal.show()
-           
+            $scope.lat = item.latLong["lat"];
+            $scope.lon = item.latLong["long"];
+            //INITIALIZE GOOGLE MAPS 
+            uiGmapGoogleMapApi.then(function(maps) {
+                $scope.marker = {
+                    id: 0,
+                    coords: {
+                        latitude: $scope.lat,
+                        longitude: $scope.lon
+                    }
+                };
+
+                $scope.map = {
+                    center: {
+                        latitude: $scope.lat,
+                        longitude: $scope.lon
+                    },
+                    zoom: 13
+                };
+            });
+            $scope.modal.show();
+
         });
     };
 
@@ -200,56 +228,6 @@ angular.module('Moodtracker.controllers', [])
 
 })
 
-
-.controller('MapCtrl', function($scope, $ionicLoading, LocationService) {
-    function initialize() {
-        var mapOptions = {
-            center: new google.maps.LatLng(43.07493, -89.381388),
-            zoom: 16,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map = new google.maps.Map(document.getElementById("map"),
-            mapOptions);
-
-        // Stop the side bar from dragging when mousedown/tapdown on the map
-        google.maps.event.addDomListener(document.getElementById('map'), 'mousedown', function(e) {
-            e.preventDefault();
-            return false;
-        });
-
-        $scope.map = map;
-    }
-    google.maps.event.addDomListener(window, 'load', initialize);
-
-
-    $scope.centerOnMe = function() {
-        if (!$scope.map) {
-            return;
-        }
-
-        $scope.loading = $ionicLoading.show({
-            content: 'Getting current location...',
-            showBackdrop: false
-        });
-
-        LocationService.getLatLong().then(
-            function(latLong) {
-                $scope.latLong = latLong;
-                console.log('LatLong=');
-                console.log($scope.latLong);
-
-                $scope.map.setCenter(new google.maps.LatLng(latLong.lat, latLong.long));
-                $scope.loading.hide();
-
-            },
-
-            function(error) {
-                alert(error);
-            }
-        )
-
-    };
-})
 
 
 

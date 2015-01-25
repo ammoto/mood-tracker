@@ -18,3 +18,14 @@
 .x.axis path {
   display: none;
 }
+
+#map {
+  width: 75%;
+  height: 75%;
+}
+
+.scroll {
+  height: 100%;
+}
+
+.angular-google-map-container { height: 400px; }
