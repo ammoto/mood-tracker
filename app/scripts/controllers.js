@@ -52,39 +52,32 @@ angular.module('Moodtracker.controllers', [])
         $scope.date = {
             today: null
         };
+        $scope.location = {
+          latLong: null
+        }
 
         $scope.date.today = new Date().toISOString();
 
-
-
         $scope.saveMood = function() {
 
-            if ($scope.name.text === '') {
-                return;
-            }
+            if ($scope.name.text === '') {return;}
 
             LocationService.getLatLong().then(
             function(latLong) {
-                $scope.latLong = latLong;
+                $scope.location.latLong = latLong;
                 console.log('LatLong=');
-                console.log($scope.latLong);
-                
-                // $scope.map.setCenter(new google.maps.LatLng(latLong.lat, latLong.long));
-                // $scope.loading.hide();
-
-            },
-            
-            function(error) {
-                alert(error);
-            }
-        )
-
-            sync.$push({
+                console.log($scope.location.latLong);
+                //Save to firebase
+                 sync.$push({
                 name: $scope.name.text,
                 scale: $scope.scale.num,
                 comment: $scope.comment.text,
-                date: $scope.date.today
+                date: $scope.date.today,
+                latLong: $scope.location.latLong
             });
+            }, function(error) {alert(error);})
+
+           
         }
     })
 
@@ -122,7 +115,8 @@ angular.module('Moodtracker.controllers', [])
                     score: parseInt(e["scale"]),
                     mood: e["name"],
                     color: color,
-                    comment: e["comment"]
+                    comment: e["comment"],
+                    latLong: e["latLong"]
                 };
             }
         })
@@ -166,7 +160,8 @@ angular.module('Moodtracker.controllers', [])
         $scope.$apply(function() {
             if (!$scope.showDetailPanel)
                 $scope.showDetailPanel = true;
-            $scope.detailItem = item.comment;
+            $scope.detailComment = item.comment;
+            $scope.detailLocation = item.latLong;
         });
     };
 
