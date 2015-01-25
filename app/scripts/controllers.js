@@ -77,45 +77,39 @@ angular.module('Moodtracker.controllers', [])
 
     $scope.rawdata = sync.$asArray();
     $scope.data2 = [];
-    //Data for Today, finish this.. to fiter for date only today
+
     $scope.getTodayData = function() {
-       var today = new Date().toISOString();
-       today = today.substring(0, today.indexOf('T'));
+        var today = new Date().toISOString();
+        today = today.substring(0, today.indexOf('T'));
         $scope.data = $scope.rawdata.map(function(e) {
-            
-            var time = new Date().toISOString().split("T").pop();
             var edate = e["date"].substring(0, e["date"].indexOf('T'));
-            console.log('edate is', edate);
-            console.log('today is', today);
+            var time = e["date"].split("T").pop().substring(0, 8);
             if (edate === today) {
+              if (e["name"] === "Happy") {
+                var color = '#F4FA58';
+              }
+              else if (e["name"] === "Sad") {
+                var color = '#81DAF5';
+              }
+              else if (e["name"] === "Stressed") {
+                var color = '#FA5858';
+              }
+              else if (e["name"] === "Neutral") {
+                var color = '#81F781';
+              }
+    
                 return {
-                    name: edate,
+                    name: time,
                     score: parseInt(e["scale"]),
-                    mood: e["name"]
+                    mood: e["name"],
+                    color: color
                 };
             }
         })
-        console.log('FILTERED DATA IS ', $scope.data)
     }
 
-    $scope.greeting = "Resize the page to see the re-rendering";
-
-    // $scope.data = [{
-    //     name: "Greg",
-    //     score: 9
-    // }, {
-    //     name: "Ari",
-    //     score: 9
-    // }, {
-    //     name: 'Q',
-    //     score: 7
-    // }, {
-    //     name: "Loser",
-    //     score: 4
-    // }];
-
     $scope.onClick = function(item) {
-        alert('clicked!');
+
         $scope.$apply(function() {
             if (!$scope.showDetailPanel)
                 $scope.showDetailPanel = true;
