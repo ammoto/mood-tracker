@@ -144,6 +144,7 @@ angular.module('Moodtracker.controllers', [])
 
                 return {
                     date: edate,
+                    time: time,
                     score: parseInt(e["scale"]),
                     mood: e["name"],
                     color: color,
@@ -185,6 +186,9 @@ angular.module('Moodtracker.controllers', [])
         $scope.$apply(function() {
             if (!$scope.showDetailPanel)
                 $scope.showDetailPanel = true;
+            $scope.detailMood = item.name;
+            $scope.detailDate = item.date;
+            $scope.detailTime = item.time;
             $scope.detailComment = item.comment;
             $scope.detailLocation = item.latLong;
             $scope.modal.show()
