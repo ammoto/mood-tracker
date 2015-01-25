@@ -38,20 +38,29 @@ angular.module('Moodtracker.controllers', [])
     })
     // MOOD ENTRY
     .controller('MoodEntryCtrl', function($scope, $firebase) {
+        var sync = $firebase(new Firebase("https://mood-track.firebaseio.com/Moods"));
 
-        $scope.name = {};
-        $scope.scale = {};
-        $scope.comment = {};
-        $scope.date = {};
-        $scope.date.today = new Date().toString();
+        $scope.name = {
+            text: null
+        };
+        $scope.scale = {
+            num: 5
+        };
+        $scope.comment = {
+            text: null
+        };
+        $scope.date = {
+            today: null
+        };
+        $scope.date.today = new Date().toISOString();
 
         $scope.saveMood = function() {
-
 
             if ($scope.name.text === '') {
                 return;
             }
-            $scope.moods.$push({
+
+            sync.$push({
                 name: $scope.name.text,
                 scale: $scope.scale.num,
                 comment: $scope.comment.text,
@@ -66,14 +75,28 @@ angular.module('Moodtracker.controllers', [])
 
     var sync = $firebase(new Firebase("https://mood-track.firebaseio.com/Moods"));
 
-    $scope.data1 = sync.$asArray();
+    $scope.rawdata = sync.$asArray();
     $scope.data2 = [];
-
-    $scope.filterData = function () {
-    $scope.data = $scope.data1.map(function (e) {
-        return {name: e["name"], score: parseInt(e["scale"])};
-    })
-   }
+    //Data for Today, finish this.. to fiter for date only today
+    $scope.getTodayData = function() {
+       var today = new Date().toISOString();
+       today = today.substring(0, today.indexOf('T'));
+        $scope.data = $scope.rawdata.map(function(e) {
+            
+            var time = new Date().toISOString().split("T").pop();
+            var edate = e["date"].substring(0, e["date"].indexOf('T'));
+            console.log('edate is', edate);
+            console.log('today is', today);
+            if (edate === today) {
+                return {
+                    name: edate,
+                    score: parseInt(e["scale"]),
+                    mood: e["name"]
+                };
+            }
+        })
+        console.log('FILTERED DATA IS ', $scope.data)
+    }
 
     $scope.greeting = "Resize the page to see the re-rendering";
 
