@@ -1,7 +1,7 @@
 'use strict';
 angular.module('Moodtracker.controllers', [])
     // DASH
-    .controller('DashCtrl', function($scope,$rootScope, $firebase, $timeout, $state) {
+    .controller('DashCtrl', function($scope, $rootScope, $firebase, $timeout, $state) {
 
         // $scope.minute = {
         //     num: 0
@@ -20,68 +20,77 @@ angular.module('Moodtracker.controllers', [])
 
 
         if ($rootScope.timerRunning === true) {
-              $timeout(function() {
+            $timeout(function() {
                 // console.log('countdown is ', $scope.countdown.num, 'counter started!')
                 $scope.$broadcast('timer-start');
-            }, 2)  
-        }
-        else {
-                $timeout(function() {
+            }, 2)
+        } else {
+            $timeout(function() {
                 // console.log('at stoptimer() countdown.num is ', $rootScope.countdown.num)
                 $scope.$broadcast('timer-stop');
-                 $rootScope.timerRunning = false;
-                 $scope.$apply();
+                $rootScope.timerRunning = false;
+                $scope.$apply();
             }, 2);
         }
-     
-       console.log('AT PAGE LOAD rootscope.timerrunning is ', $rootScope.timerRunning);
+
+        console.log('AT PAGE LOAD rootscope.timerrunning is ', $rootScope.timerRunning);
         console.log('AT PAGE LOAD countdown.num is ', $rootScope.countdown.num);
 
         $scope.startTimer = function() {
-            $rootScope.countdown.num = ($rootScope.minute.num *60)+($rootScope.hour.num*3600)+$rootScope.second.num ;
+            $rootScope.countdown.num = ($rootScope.minute.num * 60) + ($rootScope.hour.num * 3600) + $rootScope.second.num;
 
             $timeout(function() {
                 console.log('AT START TRACKING, countdown.num is ', $rootScope.countdown.num)
                 $scope.$broadcast('timer-start');
-                 $rootScope.timerRunning = true;
+                $rootScope.timerRunning = true;
             }, 0);
-            
+
         };
 
 
         $scope.stopTimer = function() {
-             $rootScope.countdown.num = 0;
-               $timeout(function() {
+            $rootScope.countdown.num = 0;
+            $timeout(function() {
                 console.log('AT STOP TRACKING countdown.num is ', $rootScope.countdown.num)
                 $scope.$broadcast('timer-stop');
-                 $rootScope.timerRunning = false;
-                 $scope.$apply();
+                $rootScope.timerRunning = false;
+                $scope.$apply();
             }, 2);
-        
-           
+
+
         };
 
         $scope.$on('timer-stopped', function(event, data) {
             console.log('Timer Stopped ');
         });
-        
-        $scope.callbackTimer = function () {
+
+        $scope.callbackTimer = function() {
             // var element = document.querySelector('#speaker');
             // element.speak();
             console.log('Timer finished!')
             $timeout(function() {
-                      $rootScope.countdown.num = ($rootScope.minute.num *60)+($rootScope.hour.num*3600)+$rootScope.second.num ;
-                  $scope.$apply();
-                     console.log('AT TIMER CALLBACK countdown.num is ', $rootScope.countdown.num);
-                    $state.go('tab.moodentry');
+                $rootScope.countdown.num = ($rootScope.minute.num * 60) + ($rootScope.hour.num * 3600) + $rootScope.second.num;
+                $scope.$apply();
+                console.log('AT TIMER CALLBACK countdown.num is ', $rootScope.countdown.num);
+                $state.go('tab.moodentry');
             }, 0);
-        
+
 
         }
 
         // TODO: FINISH LOGIN
         $scope.login = function(form) {
             $rootScope.submitted = true;
+
+            var ref = new Firebase("https://mood-track.firebaseio.com");
+            ref.authWithOAuthPopup("twitter", function(error, authData) {
+                if (error) {
+                    console.log("Login Failed!", error);
+                } else {
+                    console.log("Authenticated successfully with payload:", authData);
+                    $rootScope.authData = authData;
+                }
+            });
 
             // if (form.$valid) {
             //     Auth.login({
@@ -104,7 +113,8 @@ angular.module('Moodtracker.controllers', [])
 
     })
     // MOOD ENTRY
-    .controller('MoodEntryCtrl', function($scope, $firebase,$state, $ionicLoading, LocationService,speak) {
+    .controller('MoodEntryCtrl', function($scope, $firebase, $state, $ionicLoading, LocationService, speak, $rootScope) {
+         console.log('root autotweet is ', $rootScope.autotweet);
         var sync = $firebase(new Firebase("https://mood-track.firebaseio.com/Moods"));
         speak('How are you feeling right now?');
         $scope.name = {
@@ -297,10 +307,15 @@ angular.module('Moodtracker.controllers', [])
 })
 
 
+//ACCOUNT CONTROLLER
+.controller('AccountCtrl', function($scope, $rootScope) {
 
+ $scope.toggleAuto = function () {
+    $rootScope.auto.checked = true;
+  
+    console.log('autotweet is ', $rootScope.auto)
+ }
 
-
-
-.controller('AccountCtrl', function($scope) {
+    
 
 });

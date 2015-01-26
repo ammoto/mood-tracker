@@ -10,7 +10,9 @@ angular.module('Moodtracker', ['ionic', 'config', 'firebase', 'd3', 'ui.router',
 
 .run(function($ionicPlatform, $rootScope) {
         // rootscope variables
+        $rootScope.authData = {};
         $rootScope.submitted = false;
+        $rootScope.auto = {checked: false};
         $rootScope.timerRunning = false;
         $rootScope.minute = {
             num: 0
