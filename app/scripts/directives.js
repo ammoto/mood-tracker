@@ -112,7 +112,7 @@ angular.module('Moodtracker.directives', ['d3'])
         return {
             link: function(scope, element, attr) {
                 setTimeout(function() {
-                        twttr.widgets.createShareButton(
+                        twttr.widgetscreateShareButton(
                             attr.url,
                             element[0],
                             function(el) {}, {

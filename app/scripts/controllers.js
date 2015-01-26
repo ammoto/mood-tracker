@@ -146,7 +146,7 @@ angular.module('Moodtracker.controllers', [])
                 console.log('autotweeting...')
             }
 
-       
+       clicker.click()
 
 
 
