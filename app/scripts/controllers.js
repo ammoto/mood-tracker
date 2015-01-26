@@ -1,65 +1,87 @@
 'use strict';
 angular.module('Moodtracker.controllers', [])
     // DASH
-    .controller('DashCtrl', function($scope, $firebase, $timeout, $state) {
-        $scope.minute = {
-            num: 0
-        };
-        $scope.hour = {
-            num: 0
-        };
-         $scope.second = {
-            num: 0
-        };
-        $scope.countdown = {
-            num:0
+    .controller('DashCtrl', function($scope,$rootScope, $firebase, $timeout, $state) {
+
+        // $scope.minute = {
+        //     num: 0
+        // };
+        // $scope.hour = {
+        //     num: 0
+        // };
+        //  $scope.second = {
+        //     num: 0
+        // };
+        // $scope.countdown = {
+        //     num:0
+        // }
+        // $scope.$broadcast('timer-clear');
+
+
+
+        if ($rootScope.timerRunning === true) {
+              $timeout(function() {
+                // console.log('countdown is ', $scope.countdown.num, 'counter started!')
+                $scope.$broadcast('timer-start');
+            }, 2)  
         }
-        $scope.$broadcast('timer-clear');
-        $scope.timerRunning = false;
+        else {
+                $timeout(function() {
+                // console.log('at stoptimer() countdown.num is ', $rootScope.countdown.num)
+                $scope.$broadcast('timer-stop');
+                 $rootScope.timerRunning = false;
+                 $scope.$apply();
+            }, 2);
+        }
+     
+       console.log('AT PAGE LOAD rootscope.timerrunning is ', $rootScope.timerRunning);
+        console.log('AT PAGE LOAD countdown.num is ', $rootScope.countdown.num);
 
         $scope.startTimer = function() {
-            $scope.countdown.num = ($scope.minute.num *60)+($scope.hour.num*3600)+$scope.second.num ;
+            $rootScope.countdown.num = ($rootScope.minute.num *60)+($rootScope.hour.num*3600)+$rootScope.second.num ;
 
             $timeout(function() {
-                console.log('countdown.num is ', $scope.countdown.num)
+                console.log('AT START TRACKING, countdown.num is ', $rootScope.countdown.num)
                 $scope.$broadcast('timer-start');
+                 $rootScope.timerRunning = true;
             }, 0);
-            $scope.timerRunning = true;
+            
         };
 
 
         $scope.stopTimer = function() {
-             $scope.countdown.num = 0;
+             $rootScope.countdown.num = 0;
                $timeout(function() {
-                console.log('countdown.num is ', $scope.countdown.num)
+                console.log('AT STOP TRACKING countdown.num is ', $rootScope.countdown.num)
                 $scope.$broadcast('timer-stop');
-            }, 0);
+                 $rootScope.timerRunning = false;
+                 $scope.$apply();
+            }, 2);
         
-            $scope.timerRunning = false;
+           
         };
 
         $scope.$on('timer-stopped', function(event, data) {
-            console.log('Timer Stopped - data = ', data);
+            console.log('Timer Stopped ');
         });
         
         $scope.callbackTimer = function () {
             // var element = document.querySelector('#speaker');
             // element.speak();
-            console.log('timer finished!')
+            console.log('Timer finished!')
             $timeout(function() {
+                      $rootScope.countdown.num = ($rootScope.minute.num *60)+($rootScope.hour.num*3600)+$rootScope.second.num ;
+                  $scope.$apply();
+                     console.log('AT TIMER CALLBACK countdown.num is ', $rootScope.countdown.num);
                     $state.go('tab.moodentry');
             }, 0);
         
 
         }
 
-
-
-
-
         // TODO: FINISH LOGIN
         $scope.login = function(form) {
-            $scope.submitted = true;
+            $rootScope.submitted = true;
 
             // if (form.$valid) {
             //     Auth.login({
@@ -82,9 +104,9 @@ angular.module('Moodtracker.controllers', [])
 
     })
     // MOOD ENTRY
-    .controller('MoodEntryCtrl', function($scope, $firebase, $ionicLoading, LocationService) {
+    .controller('MoodEntryCtrl', function($scope, $firebase,$state, $ionicLoading, LocationService,speak) {
         var sync = $firebase(new Firebase("https://mood-track.firebaseio.com/Moods"));
-
+        speak('How are you feeling right now.');
         $scope.name = {
             text: null
         };
@@ -122,6 +144,7 @@ angular.module('Moodtracker.controllers', [])
                         date: $scope.date.today,
                         latLong: $scope.location.latLong
                     });
+                    $state.go('tab.dash');
                 },
                 function(error) {
                     alert(error);
