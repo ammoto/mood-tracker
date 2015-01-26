@@ -106,7 +106,7 @@ angular.module('Moodtracker.controllers', [])
     // MOOD ENTRY
     .controller('MoodEntryCtrl', function($scope, $firebase,$state, $ionicLoading, LocationService,speak) {
         var sync = $firebase(new Firebase("https://mood-track.firebaseio.com/Moods"));
-        speak('How are you feeling right now.');
+        speak('How are you feeling right now?');
         $scope.name = {
             text: null
         };
@@ -284,7 +284,7 @@ angular.module('Moodtracker.controllers', [])
                         latitude: $scope.lat,
                         longitude: $scope.lon
                     },
-                    zoom: 13
+                    zoom: 17
                 };
             });
             $scope.modal.show();
