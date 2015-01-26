@@ -3,88 +3,86 @@ angular.module('Moodtracker.controllers', [])
     // DASH
     .controller('DashCtrl', function($scope, $firebase) {
 
-        $scope.first = {
-            text: null
-        };
-        $scope.last = {
-            text: null
-        };
-        $scope.email = {
-            text: null
-        };
 
-        // $scope.moods = $firebase(new Firebase("https://mood-track.firebaseio.com/Moods"));
 
-        $scope.signUp = function() {
 
-            if ($scope.first.text === '') {
-                return;
-            }
-            if ($scope.last.text === '') {
-                return;
-            }
-            if ($scope.email.text === '') {
-                return;
-            }
 
-            $scope.moods.$push({
-                name: $scope.name.text,
-                scale: $scope.scale.num,
-                comment: $scope.comment.text
-            });
 
-        }
+
+
+      // TODO: FINISH LOGIN
+            $scope.login = function(form) {
+                $scope.submitted = true;
+
+                // if (form.$valid) {
+                //     Auth.login({
+                //             email: $scope.user.email,
+                //             password: $scope.user.password
+                //         })
+                //         .then(function() {
+                //             $location.path('/');
+                //         })
+                //         .catch(function(err) {
+                //             $scope.errors.other = err.message;
+                //         });
+                // }
+            };
+            // $scope.loginOauth = function(provider) {
+            //     $window.location.href = '/auth/' + provider;
+            // };
+
+        
 
     })
-    // MOOD ENTRY
-    .controller('MoodEntryCtrl', function($scope, $firebase, $ionicLoading, LocationService) {
-        var sync = $firebase(new Firebase("https://mood-track.firebaseio.com/Moods"));
+// MOOD ENTRY
+.controller('MoodEntryCtrl', function($scope, $firebase, $ionicLoading, LocationService) {
+    var sync = $firebase(new Firebase("https://mood-track.firebaseio.com/Moods"));
 
-        $scope.name = {
-            text: null
-        };
-        $scope.scale = {
-            num: 5
-        };
-        $scope.comment = {
-            text: null
-        };
-        $scope.date = {
-            today: null
-        };
-        $scope.location = {
-            latLong: null
+    $scope.name = {
+        text: null
+    };
+    $scope.scale = {
+        num: 5
+    };
+    $scope.comment = {
+        text: null
+    };
+    $scope.date = {
+        today: null
+    };
+    $scope.location = {
+        latLong: null
+    }
+
+    $scope.date.today = new Date().toISOString();
+
+    $scope.saveMood = function() {
+
+        if ($scope.name.text === '') {
+            return;
         }
 
-        $scope.date.today = new Date().toISOString();
-
-        $scope.saveMood = function() {
-
-            if ($scope.name.text === '') {
-                return;
-            }
-
-            LocationService.getLatLong().then(
-                function(latLong) {
-                    $scope.location.latLong = latLong;
-                    console.log('LatLong=');
-                    console.log($scope.location.latLong);
-                    //Save to firebase
-                    sync.$push({
-                        name: $scope.name.text,
-                        scale: $scope.scale.num,
-                        comment: $scope.comment.text,
-                        date: $scope.date.today,
-                        latLong: $scope.location.latLong
-                    });
-                },
-                function(error) {
-                    alert(error);
-                })
+        LocationService.getLatLong().then(
+            function(latLong) {
+                $scope.location.latLong = latLong;
+                console.log('LatLong=');
+                console.log($scope.location.latLong);
+                //Save to firebase
+                sync.$push({
+                    name: $scope.name.text,
+                    scale: $scope.scale.num,
+                    comment: $scope.comment.text,
+                    date: $scope.date.today,
+                    latLong: $scope.location.latLong
+                });
+            },
+            function(error) {
+                alert(error);
+            })
 
 
-        }
-    })
+    }
+})
 
 
 // DATA CHARTS
@@ -196,7 +194,7 @@ angular.module('Moodtracker.controllers', [])
             if (!$scope.showDetailPanel)
                 $scope.showDetailPanel = true;
             $scope.detailMood = item.mood;
-            $scope.detailDate = item.date ;
+            $scope.detailDate = item.date;
             $scope.detailTime = item.name;
             $scope.detailComment = item.comment;
             $scope.lat = item.latLong["lat"];
