@@ -41,8 +41,10 @@ angular.module('Moodtracker.controllers', [])
         $scope.$on('timer-stopped', function(event, data) {
             console.log('Timer Stopped - data = ', data);
         });
-
+        
         $scope.callbackTimer = function () {
+            // var element = document.querySelector('#speaker');
+            // element.speak();
             console.log('timer finished!')
             $timeout(function() {
                     $state.go('tab.moodentry');
