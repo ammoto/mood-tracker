@@ -113,8 +113,8 @@ angular.module('Moodtracker.controllers', [])
 
     })
     // MOOD ENTRY
-    .controller('MoodEntryCtrl', function($scope, $firebase, $state, $ionicLoading, LocationService, speak, $rootScope) {
-         console.log('root autotweet is ', $rootScope.auto);
+    .controller('MoodEntryCtrl', function($scope, $firebase, $state,clicker, $ionicLoading, LocationService, speak, $rootScope) {
+        console.log('root autotweet is ', $rootScope.auto);
         var sync = $firebase(new Firebase("https://mood-track.firebaseio.com/Moods"));
         speak('How are you feeling right now?');
         $scope.name = {
@@ -135,11 +135,20 @@ angular.module('Moodtracker.controllers', [])
 
         $scope.date.today = new Date().toISOString();
 
+           
         $scope.saveMood = function() {
 
             if ($scope.name.text === '') {
                 return;
             }
+
+             if ($rootScope.auto.checked === true) {
+                console.log('autotweeting...')
+            }
+
+       
+
+
 
             LocationService.getLatLong().then(
                 function(latLong) {
@@ -310,19 +319,19 @@ angular.module('Moodtracker.controllers', [])
 //ACCOUNT CONTROLLER
 .controller('AccountCtrl', function($scope, $rootScope, $timeout) {
 
-$scope.auto = {
-    checked: false
-}
+    $scope.auto = {
+        checked: false
+    }
 
- $scope.toggleAuto = function () {
-      $timeout(function() {
-                $scope.auto.checked = true;
-                $rootScope.auto.checked = $scope.auto.checked;
-    console.log('auto is ', $scope.auto.checked,'rootauto is ', $rootScope.auto.checked)
-            }, 3);
- 
- }
+    $scope.toggleAuto = function() {
+        $timeout(function() {
+            $scope.auto.checked = true;
+            $rootScope.auto.checked = $scope.auto.checked;
+            console.log('auto is ', $scope.auto.checked, 'rootauto is ', $rootScope.auto.checked)
+        }, 3);
 
-    
+    }
+
+
 
 });
