@@ -7,7 +7,10 @@
     "angularfire": "~0.9.1",
     "d3": "~3.5.3",
     "dangle": "*",
-    "nvd3": "~1.1.15-beta"
+    "nvd3": "~1.1.15-beta",
+    "angular-google-maps": "~2.0.12",
+    "angular-timer": "~1.2.0",
+    "voice-elements": "~0.2.0"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.17",

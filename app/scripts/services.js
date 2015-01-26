@@ -1,42 +1,68 @@
 'use strict';
 angular.module('Moodtracker.services', [])
 
-/**
- * A simple example service that returns some data.
- */
-.factory('Friends', function() {
-  // Might use a resource here that returns a JSON array
+.factory('LocationService', function($q) {
+    
+    var latLong = null;
+    
+    var getLatLong = function(refresh) {
+        
+        var deferred = $q.defer();
+        
+        if( latLong === null || refresh ) {
+        
+            console.log('Getting lat long');
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                console.log('Position=')
+                console.log(pos);
+                latLong =  { 'lat' : pos.coords.latitude, 'long' : pos.coords.longitude } 
+                deferred.resolve(latLong);
 
-  // Some fake testing data
-  var friends = [
-    { id: 0, name: 'Scruff McGruff' },
-    { id: 1, name: 'G.I. Joe' },
-    { id: 2, name: 'Miss Frizzle' },
-    { id: 3, name: 'Ash Ketchum' }
-  ];
+            }, function(error) {
+                console.log('Got error!');
+                console.log(error);
+                latLong = null
+                
+                deferred.reject('Failed to Get Lat Long')
 
-  return {
-    all: function() {
-      return friends;
-    },
-    get: function(friendId) {
-      // Simple index lookup
-      return friends[friendId];
+            });
+            
+        }  else {
+            deferred.resolve(latLong);
+        }
+        
+        return deferred.promise;
+
+    };      
+    
+    return {
+        
+        getLatLong : getLatLong
+        
     }
-  };
 })
 
-// .factory("ItemModel", function($rootScope,$firebase) {
+ .service('speak', function () {
 
-// var refMoods = new Firebase("https://mood-track.firebaseio.com/Moods");
-// var scope = $rootScope.$new();
-// scope.moods = [];
-// $firebase(refMoods,scope,'moods');
-// return scope;
 
-//   // var scope = $rootScope.$new(),
-//   //     url = 'https://mood-track.firebaseio.com/Moods';
-//   // scope.items = [];
-//   // var promise = $firebase(new Firebase(url).child('Moods'), scope, 'items');
-//   // return scope;
-// })
+    // AngularJS will instantiate a singleton by calling "new" on this function
+        return function (message,callback) {
+            var msg = new SpeechSynthesisUtterance();
+          var voices = window.speechSynthesis.getVoices();
+          msg.voice = voices[10]; // Note: some voices don't support altering params
+          msg.voiceURI = 'native';
+          msg.volume = 1; // 0 to 1
+          msg.rate = .75; // 0.1 to 10
+          msg.pitch = 1.5; //0 to 2
+          msg.text = message;
+          msg.lang = 'en-US';
+
+          msg.onend = function(e) {
+              // console.log('Finished in ' + event.elapsedTime + ' seconds.');
+              // callback();
+          };
+
+          speechSynthesis.speak(msg);
+        };
+  });
+
