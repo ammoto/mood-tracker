@@ -45,3 +45,7 @@
   border-radius: 4px;
 }
 
+.scroll-content {
+    background: url('/image');
+
+  }

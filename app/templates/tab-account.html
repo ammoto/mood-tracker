@@ -1,5 +1,14 @@
 <ion-view title="Account">
   <ion-content class="has-header padding">
     <h1>Account</h1>
+
+<ul class="list">
+ <h5>Logged in as: {{authData.twitter.displayName}}</h5>
+  <li class="item item-toggle">
+    <ion-toggle ng-model='auto.checked' ng-change='toggleAuto()' toggle-class="toggle-calm">Auto Tweet</ion-toggle>
+  </li>
+
+</ul>
+
   </ion-content>
 </ion-view>

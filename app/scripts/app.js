@@ -10,7 +10,9 @@ angular.module('Moodtracker', ['ionic', 'config', 'firebase', 'd3', 'ui.router',
 
 .run(function($ionicPlatform, $rootScope) {
         // rootscope variables
+        $rootScope.authData = {};
         $rootScope.submitted = false;
+        $rootScope.auto = {checked: false};
         $rootScope.timerRunning = false;
         $rootScope.minute = {
             num: 0
@@ -105,7 +107,18 @@ angular.module('Moodtracker', ['ionic', 'config', 'firebase', 'd3', 'ui.router',
                 controller: 'AccountCtrl'
             }
         }
-    });
+    })
+
+  // .state('image', {
+  //       url: '/image',
+  //       views: {
+  //           'image': {
+  //               templateUrl: 'app/tab-accoun',
+  //               controller: 'AccountCtrl'
+  //           }
+  //       }
+  //   });
+
 
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/tab/dash');
