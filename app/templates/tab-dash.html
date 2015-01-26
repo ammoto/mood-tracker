@@ -4,29 +4,43 @@
         <div class="bar bar-header bar-calm">
             <h1 class="title">Welcome to Mood Tracker!</h1>
         </div>
-<div ng-show="submitted">
-   <form ng-submit="startTimer()">
-    <div class="bar bar-header bar-calm">
-  <h1 class="title">Set Interval</h1>
-</div>
-  <div class="list list-inset">
-  <label class="item item-input">
-    <i class="icon ion-clock placeholder-icon"></i>
-    <input type="number" placeholder="Hours">
-      <i class="icon ion-clock placeholder-icon"></i>
-    <input type="number" placeholder="Minutes">
-  </label>
-  <br>
-   <center>  <button class="button button-energized">
-Start Tracking!
-</button>
-</center>
-</form>
-</div>
-  <div ng-show="started">
-<timer countdown="10041" max-time-unit="'minute'" interval="1000">{{mminutes}} minute{{minutesS}}, {{sseconds}} second{{secondsS}}</timer>
-  </div>
-</div>
+        <div ng-show="submitted">
+            <form ng-submit="startTimer()">
+                <div class="bar bar-header bar-calm">
+                    <h1 class="title">Set Mood Tracking Interval</h1>
+                </div>
+                <div class="list list-inset">
+                    Hours
+                    <label class="item item-input"> <i class="icon ion-clock placeholder-icon"></i>
+
+                        <input type="number" ng-model="hour.num" placeholder="Hours">
+                    </label>
+                    Minutes
+                    <label class="item item-input"> <i class="icon ion-clock placeholder-icon"></i>
+
+                        <input type="number" ng-model="minute.num" placeholder="Minutes">
+                    </label>
+                    <br>
+                    Seconds
+                     <label class="item item-input"> <i class="icon ion-clock placeholder-icon"></i>
+
+                        <input type="number" ng-model="second.num" placeholder="Seconds">
+                    </label>
+                    <br>
+                    <center>
+                        <button type="submit" class="button button-energized" ng-disabled="timerRunning">Start Tracking!</button>
+                        <button ng-click="stopTimer()" class="button button-assertive" ng-disabled="!timerRunning">Stop Tracking</button>
+                    </center>
+                    <!-- TIMER -->
+                    <!--         <div ng-show="timerRunning"> -->
+                    <center>
+                        <h1>  <timer autostart='false' countdown="countdown.num" max-time-unit="'hour'" interval="1000" finish-callback="callbackTimer()">{{mminutes}} minute{{minutesS}}, {{sseconds}} second{{secondsS}}</timer></h1>
+                    </center>
+                    <!-- </div> -->
+            </form>
+            </div>
+
+        </div>
 
 
 
