@@ -113,7 +113,7 @@ angular.module('Moodtracker.controllers', [])
 
     })
     // MOOD ENTRY
-    .controller('MoodEntryCtrl', function($scope, $firebase, $state,clicker, $ionicLoading, LocationService, speak, $rootScope) {
+    .controller('MoodEntryCtrl', function($scope, $firebase, $state, $ionicLoading, LocationService, speak, $rootScope) {
         console.log('root autotweet is ', $rootScope.auto);
         var sync = $firebase(new Firebase("https://mood-track.firebaseio.com/Moods"));
         speak('How are you feeling right now?');
@@ -146,7 +146,7 @@ angular.module('Moodtracker.controllers', [])
                 console.log('autotweeting...')
             }
 
-       clicker.click()
+      
 
 
 
