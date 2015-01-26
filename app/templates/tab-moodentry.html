@@ -1,0 +1,39 @@
+<ion-view title="Mood Entry">
+    <ion-content class="has-header padding">
+        <h1>Mood Tracker</h1>
+        <div class="bar bar-header bar-calm">
+            <h1 class="title">How Are you feeling today?</h1>
+
+        </div>
+
+        <form method="get" ng-submit='saveMood()'>
+
+            <div class="list">
+                   {{date.today | date: short}}
+                    {{latLong}}
+                </div>
+
+                <label class="item item-input">
+                    <input type="text" placeholder="Your Mood" ng-model='name.text'>
+                </label>
+                <div class="item range range-positive">
+                    <i class="icon ion-ios7-cloud"></i>
+                    <input type="range" name="scale" min="0" max="10" value="5" ng-model='scale.num'>
+                    <i class="icon ion-ios7-sunny-outline"></i>
+                </div>
+
+                <label class="item item-input">
+                    <input type="text" placeholder="Comment" ng-model='comment.text'>
+                </label>
+                <button class="button button-energized" type='submit'>
+                    Submit your Mood!
+                </button>
+            <span ng-if="auto.checked">
+
+                <a twitter id="twit" data-text="My mood right now is:{{name.text}}! {{comment.text}}.  --powered by mood-tracker app! " ></a>
+            </span>
+            </div>
+        </form>
+
+    </ion-content>
+</ion-view>
