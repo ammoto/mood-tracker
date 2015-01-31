@@ -11,6 +11,7 @@
         <button class="button button-positive" ng-click='getOverallData()'>
             Overall Mood Data
         </button>
+        {{data}}
     </center>
         <div d3-bars data='data' on-click="onClick(item)" bar-height="22" bar-padding="10">
         </div>
