@@ -182,7 +182,7 @@ angular.module('Moodtracker.controllers', [])
 
     var sync = $firebase(new Firebase("https://mood-track.firebaseio.com/Moods"));
     $scope.rawdata = sync.$asArray();
-    $scope.data2 = [];
+    $scope.data = [];
 
     //RETRIEVE MOOD DATA FOR TODAY
     $scope.getTodayData = function() {
