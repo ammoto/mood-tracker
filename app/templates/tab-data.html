@@ -11,11 +11,25 @@
         <button class="button button-positive" ng-click='getOverallData()'>
             Overall Mood Data
         </button>
-        {{data}}
-    </center>
+          </center>
+            <div d3-line data='data'></div>
+             <!-- <nvd3-line-chart -->
+     <!--    data='data'
+        showXAxis="true"
+        showYAxis="true"
+        tooltips="true"
+        interactive="true">
+    </nvd3-line-chart> -->
+
+<br/>
+<br>
+<h3>Raw Data</h3>
+{{data}}
+<h3>Today Data</h3>
+
         <div d3-bars data='data' on-click="onClick(item)" bar-height="22" bar-padding="10">
         </div>
-
+    
 
         <!-- DETAIL MODAL -->
         <script id="my-modal.html" type="text/ng-template">
@@ -47,7 +61,7 @@
         </script>
 
 
-        <div d3-overall data='data2'></div>
+      
 
 
 
