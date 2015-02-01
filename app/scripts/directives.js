@@ -51,7 +51,7 @@ angular.module('Moodtracker.directives', ['d3'])
                                 color = d3.scale.category20(),
                                 xScale = d3.scale.linear()
                                 .domain([0, d3.max(data, function(d) {
-                                    return d.score;
+                                    return d.scale;
                                 })])
                                 .range([0, width]);
 
@@ -83,7 +83,7 @@ angular.module('Moodtracker.directives', ['d3'])
                                 .transition()
                                 .duration(1000)
                                 .attr('width', function(d) {
-                                    return xScale(d.score);
+                                    return xScale(d.scale);
                                 });
                             svg.selectAll('text')
                                 .data(data)
@@ -95,7 +95,7 @@ angular.module('Moodtracker.directives', ['d3'])
                                 })
                                 .attr('x', 15)
                                 .text(function(d) {
-                                    return d.name + ": " + d.mood + " (Factor: " + d.score + ")";
+                                    return d.name + ": " + d.mood + " (Factor: " + d.scale + ")";
                                 });
                         }, 200);
                     };
@@ -154,9 +154,9 @@ angular.module('Moodtracker.directives', ['d3'])
 
                                 // watch for data changes and re-render
                                 scope.$watch('data', function(newVals, oldVals) {
-                                     if(newVals){
+                                   
                                     return scope.render(newVals);
-                                }
+                                
                                 }, true);
 
                                     scope.render = function(data) {
@@ -185,14 +185,14 @@ angular.module('Moodtracker.directives', ['d3'])
                                                     return x(d.date);
                                                 })
                                                 .y(function(d) {
-                                                    return y(d.score);
+                                                    return y(d.scale);
                                                 });
 
                                             x.domain(d3.extent(data, function(d) {
                                                 return d.date;
                                             }));
                                             y.domain(d3.extent(data, function(d) {
-                                                return d.score;
+                                                return d.scale;
                                             }));
                                             svg.append("g")
                                                 .attr("class", "x axis")

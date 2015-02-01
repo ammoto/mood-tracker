@@ -187,7 +187,7 @@ angular.module('Moodtracker.controllers', [])
 
     var sync = $firebase(new Firebase("https://mood-track.firebaseio.com/Moods"));
     $scope.rawdata = sync.$asArray();
-    // $scope.data = [];
+    $scope.data = [];
 
 
     //RETRIEVE MOOD DATA FOR TODAY
@@ -229,30 +229,11 @@ angular.module('Moodtracker.controllers', [])
         console.log('getting overall data...')
         $scope.data = $scope.rawdata.map(function(e) {
 
-
-            var edate = e["date"].substring(0, e["date"].indexOf('T'));
-
-
-            console.log('date in controller is', e["date"]);
-            var time = e["date"].split("T").pop().substring(0, 8);
-
-            // if (e["name"] === "Happy") {
-            //     var color = '#F4FA58';
-            // } else if (e["name"] === "Sad") {
-            //     var color = '#81DAF5';
-            // } else if (e["name"] === "Stressed") {
-            //     var color = '#FA5858';
-            // } else if (e["name"] === "Neutral") {
-            //     var color = '#81F781';
-            // }
-
-
             return {
                     name: e["time"],
                     date: e["date"],
-                    score: parseInt(e["scale"]),
+                    scale: e["scale"],
                     mood: e["name"],
-                    color: color,
                     comment: e["comment"],
                     latLong: e["latLong"]
                 };
