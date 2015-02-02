@@ -33,14 +33,14 @@ angular.module('Moodtracker.controllers', [])
             }, 2);
         }
 
-        console.log('AT PAGE LOAD rootscope.timerrunning is ', $rootScope.timerRunning);
-        console.log('AT PAGE LOAD countdown.num is ', $rootScope.countdown.num);
+        // console.log('AT PAGE LOAD rootscope.timerrunning is ', $rootScope.timerRunning);
+        // console.log('AT PAGE LOAD countdown.num is ', $rootScope.countdown.num);
 
         $scope.startTimer = function() {
             $rootScope.countdown.num = ($rootScope.minute.num * 60) + ($rootScope.hour.num * 3600) + $rootScope.second.num;
 
             $timeout(function() {
-                console.log('AT START TRACKING, countdown.num is ', $rootScope.countdown.num)
+
                 $scope.$broadcast('timer-start');
                 $rootScope.timerRunning = true;
             }, 0);
@@ -188,40 +188,92 @@ angular.module('Moodtracker.controllers', [])
     var sync = $firebase(new Firebase("https://mood-track.firebaseio.com/Moods"));
     $scope.rawdata = sync.$asArray();
     $scope.data = [];
-    
-     $scope.ldata = [
-  {x: 0, value: 4, otherValue: 14},
-  {x: 1, value: 8, otherValue: 1},
-  {x: 2, value: 15, otherValue: 11},
-  {x: 3, value: 16, otherValue: 147},
-  {x: 4, value: 23, otherValue: 87},
-  {x: 5, value: 42, otherValue: 45}
-];
 
-$scope.options = {
-  axes: {
-    x: {key: 'x', labelFunction: function(value) {return value;}, type: 'linear', min: 0, max: 10, ticks: 2},
-    y: {type: 'linear', min: 0, max: 1, ticks: 5},
-    y2: {type: 'linear', min: 0, max: 1, ticks: [1, 2, 3, 4]}
-  },
-  series: [
-    {y: 'value', color: 'steelblue', thickness: '2px', type: 'area', striped: true, label: 'Pouet'},
-    {y: 'otherValue', axis: 'y2', color: 'lightsteelblue', visible: false, drawDots: true, dotSize: 2}
-  ],
-  lineMode: 'linear',
-  tension: 0.7,
-  tooltip: {mode: 'scrubber', formatter: function(x, y, series) {return 'pouet';}},
-  drawLegend: true,
-  drawDots: true,
-  columnsHGap: 5
-}
+    $scope.ldata = [{
+        x: 0,
+        value: 4,
+        otherValue: 14
+    }, {
+        x: 1,
+        value: 8,
+        otherValue: 1
+    }, {
+        x: 2,
+        value: 15,
+        otherValue: 11
+    }, {
+        x: 3,
+        value: 16,
+        otherValue: 147
+    }, {
+        x: 4,
+        value: 23,
+        otherValue: 87
+    }, {
+        x: 5,
+        value: 42,
+        otherValue: 45
+    }];
 
-      
+    $scope.options = {
+        axes: {
+            x: {
+                key: 'x',
+                labelFunction: function(value) {
+                    return value;
+                },
+                type: 'linear',
+                min: 0,
+                max: 10,
+                ticks: 2
+            },
+            y: {
+                type: 'linear',
+                min: 0,
+                max: 1,
+                ticks: 5
+            },
+            y2: {
+                type: 'linear',
+                min: 0,
+                max: 1,
+                ticks: [1, 2, 3, 4]
+            }
+        },
+        series: [{
+            y: 'value',
+            color: 'steelblue',
+            thickness: '2px',
+            type: 'area',
+            striped: true,
+            label: 'Pouet'
+        }, {
+            y: 'otherValue',
+            axis: 'y2',
+            color: 'lightsteelblue',
+            visible: false,
+            drawDots: true,
+            dotSize: 2
+        }],
+        lineMode: 'linear',
+        tension: 0.7,
+        tooltip: {
+            mode: 'scrubber',
+            formatter: function(x, y, series) {
+                return 'pouet';
+            }
+        },
+        drawLegend: true,
+        drawDots: true,
+        columnsHGap: 5
+    }
 
-     //   $scope.nvdata = [ {
-     //                "key": "Series 1",
-     //                "values": $scope.rawdata}]
-     // });
+
+
+    //   $scope.nvdata = [ {
+    //                "key": "Series 1",
+    //                "values": $scope.rawdata}]
+    // });
 
     // $scope.nvdata = [
     //             {
@@ -238,59 +290,65 @@ $scope.options = {
 
 
     //RETRIEVE MOOD DATA FOR TODAY
-    $scope.getTodayData = function() {
-        var today = new Date().toUTCString();
-        // today = today.substring(0, today.indexOf('T'));
-        $scope.data = $scope.rawdata.map(function(e) {
-            var date = new Date().toUTCString();
-            var array = date.split(' ');
-            var today = array[1] + ' ' + array[2] + ' ' + array[3];
+    // $scope.getTodayData = function() {
+    //     var today = new Date().toUTCString();
+    //     // today = today.substring(0, today.indexOf('T'));
+    //     $scope.data = $scope.rawdata.map(function(e) {
+    //         var date = new Date().toUTCString();
+    //         var array = date.split(' ');
+    //         var today = array[1] + ' ' + array[2] + ' ' + array[3];
 
 
-            if (e["date"] === today) {
-                if (e["name"] === "Happy") {
-                    var color = '#F4FA58';
-                } else if (e["name"] === "Sad") {
-                    var color = '#81DAF5';
-                } else if (e["name"] === "Stressed") {
-                    var color = '#FA5858';
-                } else if (e["name"] === "Neutral") {
-                    var color = '#81F781';
-                }
+    //         if (e["date"] === today) {
+    //             if (e["name"] === "Happy") {
+    //                 var color = '#F4FA58';
+    //             } else if (e["name"] === "Sad") {
+    //                 var color = '#81DAF5';
+    //             } else if (e["name"] === "Stressed") {
+    //                 var color = '#FA5858';
+    //             } else if (e["name"] === "Neutral") {
+    //                 var color = '#81F781';
+    //             }
 
-                return {
-                    name: e["time"],
-                    date: e["date"],
-                    score: parseInt(e["scale"]),
-                    mood: e["name"],
-                    color: color,
-                    comment: e["comment"],
-                    latLong: e["latLong"]
-                };
-            }
-        })
-    }
+    //             return {
+    //                 name: e["time"],
+    //                 date: e["date"],
+    //                 scale: parseInt(e["scale"]),
+    //                 mood: e["name"],
+    //                 color: color,
+    //                 comment: e["comment"],
+    //                 latLong: e["latLong"]
+    //             };
+    //         }
+    //     })
+    // }
 
     //RETRIEVE OVERALL MOOD DATA 
     $scope.getOverallData = function() {
-        console.log('getting overall data...')
-        $scope.data = $scope.rawdata.map(function(e) {
 
-            return {
-                name: e["time"],
-                date: e["date"],
-                scale: e["scale"],
-                mood: e["name"],
-                comment: e["comment"],
-                latLong: e["latLong"]
-            };
-        })
+        $scope.$evalAsync(function($scope) {
+                $scope.data = $scope.rawdata.map(function(e) {
+                    e["date"].trim();
+                    console.log('e["date"] in controller is:', e["date"])
+                    return {
+                        name: e["time"],
+                        date: e["date"],
+                        scale: e["scale"],
+                        mood: e["name"],
+                        comment: e["comment"],
+                        latLong: e["latLong"]
+                    };
+                })
+            }
+        );
+
+
 
         $scope.nvdata = $scope.rawdata.map(function(e) {
 
             return {
                 "key": "Series 1",
-                "values": [1,2]
+                "values": [1, 2]
             };
 
         })
