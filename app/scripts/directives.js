@@ -126,13 +126,13 @@ angular.module('Moodtracker.directives', ['d3'])
                             bottom: 30,
                             left: 50
                         },
-                        width = 960 - margin.left - margin.right,
+                        width = d3.select(ele[0])[0][0].offsetWidth -margin.left - margin.right,
                         height = 500 - margin.top - margin.bottom;
 
                     var svg = d3.select(ele[0])
                         .append('svg')
-                        .attr("width", width + margin.left + margin.right)
-                        .attr("height", height + margin.top + margin.bottom)
+                        .attr("width", width + margin.left + margin.right + 'px')
+                        .attr("height", height + margin.top + margin.bottom + 'px')
                         .append("g")
                         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -145,6 +145,7 @@ angular.module('Moodtracker.directives', ['d3'])
                     }, function() {
 
                         scope.render(scope.data);
+                        console.log('scope data', scope.data);
                     });
 
                     // watch for data changes and re-render
@@ -176,7 +177,8 @@ angular.module('Moodtracker.directives', ['d3'])
                                     });
                                 })
                             }
-
+                            width = d3.select(ele[0])[0][0].offsetWidth -margin.left - margin.right;
+                            svg.attr("width", width + margin.left + margin.right + 'px');
                             // Beginning of pasted code
                             var x = d3.time.scale()
                                 .range([0, width]);

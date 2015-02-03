@@ -28,6 +28,10 @@
   height: 100%;
 }
 
+d3-line svg {
+height: 500px;
+}
+
 .angular-google-map-container { height: 400px; }
 
 .progress {
