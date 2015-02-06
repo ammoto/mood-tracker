@@ -106,17 +106,17 @@ angular.module('Moodtracker.directives', ['d3'])
 ])
 
 .directive('d3Line', ['$window', '$timeout', 'd3Service',
-function($window, $timeout, d3Service) {
-    return {
-        restrict: 'A',
-        scope: {
-            data: '=',
-            label: '@',
-            onClick: '&'
-        },
-        link: function(scope, ele, attrs) {
+    function($window, $timeout, d3Service) {
+        return {
+            restrict: 'A',
+            scope: {
+                data: '=',
+                label: '@',
+                onClick: '&'
+            },
+            link: function(scope, ele, attrs) {
 
-            d3Service.d3().then(function(d3) {
+                d3Service.d3().then(function(d3) {
 
                     var renderTimeout;
 
@@ -237,7 +237,7 @@ function($window, $timeout, d3Service) {
                                     tooltip.transition()
                                         .duration(200)
                                         .style("opacity", .9);
-                                    tooltip.html(d["Cereal Name"] + "<br/> (" + xValue(d) + ", " + yValue(d) + ")")
+                                    tooltip.html(d.mood + "<br/> (" + x(d) + ", " + y(d) + ")")
                                         .style("left", (d3.event.pageX + 5) + "px")
                                         .style("top", (d3.event.pageY - 28) + "px");
                                 })
@@ -272,39 +272,36 @@ function($window, $timeout, d3Service) {
                                 .text(function(d) {
                                     return d;
                                 })
-                    
-
-                        svg.append("path")
-                            .datum(data)
-                            .attr("class", "line")
-                            .attr("d", line);
-
-                        svg.append("g")
-                            .attr("class", "x axis")
-                            .attr("transform", "translate(0," + height + ")")
-                            .call(xAxis)
 
 
-                        svg.append("g")
-                            .attr("class", "y axis")
-                            .call(yAxis)
-                            .append("text")
-                            .attr("transform", "rotate(-90)")
-                            .attr("y", 6)
-                            .attr("dy", ".71em")
-                            .style("text-anchor", "end")
-                            .text("Scale");
+                            svg.append("path")
+                                .datum(data)
+                                .attr("class", "line")
+                                .attr("d", line);
+
+                            svg.append("g")
+                                .attr("class", "x axis")
+                                .attr("transform", "translate(0," + height + ")")
+                                .call(xAxis)
 
 
+                            svg.append("g")
+                                .attr("class", "y axis")
+                                .call(yAxis)
+                                .append("text")
+                                .attr("transform", "rotate(-90)")
+                                .attr("y", 6)
+                                .attr("dy", ".71em")
+                                .style("text-anchor", "end")
+                                .text("Scale");
 
-
-                        //END OF RENDER TIMEOUT
-                    }, 200);
+                            //END OF RENDER TIMEOUT
+                        }, 200);
+                    }
+                });
             }
-        });
-}
-}
-}
+        }
+    }
 ])
 
 
