@@ -106,17 +106,17 @@ angular.module('Moodtracker.directives', ['d3'])
 ])
 
 .directive('d3Line', ['$window', '$timeout', 'd3Service',
-    function($window, $timeout, d3Service) {
-        return {
-            restrict: 'A',
-            scope: {
-                data: '=',
-                label: '@',
-                onClick: '&'
-            },
-            link: function(scope, ele, attrs) {
+function($window, $timeout, d3Service) {
+    return {
+        restrict: 'A',
+        scope: {
+            data: '=',
+            label: '@',
+            onClick: '&'
+        },
+        link: function(scope, ele, attrs) {
 
-                d3Service.d3().then(function(d3) {
+            d3Service.d3().then(function(d3) {
 
                     var renderTimeout;
 
@@ -126,7 +126,7 @@ angular.module('Moodtracker.directives', ['d3'])
                             bottom: 30,
                             left: 50
                         },
-                        width = d3.select(ele[0])[0][0].offsetWidth -margin.left - margin.right,
+                        width = d3.select(ele[0])[0][0].offsetWidth - margin.left - margin.right,
                         height = 500 - margin.top - margin.bottom;
 
                     var svg = d3.select(ele[0])
@@ -135,6 +135,10 @@ angular.module('Moodtracker.directives', ['d3'])
                         .attr("height", height + margin.top + margin.bottom + 'px')
                         .append("g")
                         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                    var tooltip = d3.select(ele[0]).append("div")
+                        .attr("class", "tooltip")
+                        .style("opacity", 0);
 
                     $window.onresize = function() {
                         scope.$apply();
@@ -145,7 +149,7 @@ angular.module('Moodtracker.directives', ['d3'])
                     }, function() {
 
                         scope.render(scope.data);
-                        console.log('scope data', scope.data);
+                        // console.log('scope data', scope.data);
                     });
 
                     // watch for data changes and re-render
@@ -167,7 +171,6 @@ angular.module('Moodtracker.directives', ['d3'])
 
 
                             if (data) {
-
                                 scope.$evalAsync(function(scope) {
                                     var parseDate = d3.time.format("%e %b %Y").parse;
                                     data.forEach(function(d, i) {
@@ -177,7 +180,7 @@ angular.module('Moodtracker.directives', ['d3'])
                                     });
                                 })
                             }
-                            width = d3.select(ele[0])[0][0].offsetWidth -margin.left - margin.right;
+                            width = d3.select(ele[0])[0][0].offsetWidth - margin.left - margin.right;
                             svg.attr("width", width + margin.left + margin.right + 'px');
                             // Beginning of pasted code
                             var x = d3.time.scale()
@@ -198,7 +201,9 @@ angular.module('Moodtracker.directives', ['d3'])
                                     return y(d.scale);
                                 });
 
-
+                            // TODO: don't want dots overlapping axis, so add in buffer to data domain
+                            // xAxis.domain([d3.min(data, x) - 1, d3.max(data, x) + 1]);
+                            // yAxis.domain([d3.min(data, y) - 1, d3.max(data, y) + 1]);
 
                             x.domain(d3.extent(data, function(d) {
                                 return d.date;
@@ -207,37 +212,99 @@ angular.module('Moodtracker.directives', ['d3'])
                                 return d.scale;
                             }));
 
-                            svg.append("path")
-                                .datum(data)
-                                .attr("class", "line")
-                                .attr("d", line);
+                            // setup fill color
+                            var cValue = function(d) {
+                                    return d.mood;
+                                },
+                                color = d3.scale.category10();
 
-                            svg.append("g")
-                                .attr("class", "x axis")
-                                .attr("transform", "translate(0," + height + ")")
-                                .call(xAxis)
+                            // draw dots
+                            svg.selectAll(".dot")
+                                .data(data)
+                                .enter().append("circle")
+                                .attr("class", "dot")
+                                .attr("r", 3.5)
+                                .attr("cx", function(d) {
+                                    return x(d.date);
+                                })
+                                .attr("cy", function(d) {
+                                    return y(d.scale);
+                                })
+                                .style("fill", function(d) {
+                                    return color(cValue(d));
+                                })
+                                .on("mouseover", function(d) {
+                                    tooltip.transition()
+                                        .duration(200)
+                                        .style("opacity", .9);
+                                    tooltip.html(d["Cereal Name"] + "<br/> (" + xValue(d) + ", " + yValue(d) + ")")
+                                        .style("left", (d3.event.pageX + 5) + "px")
+                                        .style("top", (d3.event.pageY - 28) + "px");
+                                })
+                                .on("mouseout", function(d) {
+                                    tooltip.transition()
+                                        .duration(500)
+                                        .style("opacity", 0);
+                                });
 
+                            // draw legend
+                            var legend = svg.selectAll(".legend")
+                                .data(color.domain())
+                                .enter().append("g")
+                                .attr("class", "legend")
+                                .attr("transform", function(d, i) {
+                                    return "translate(0," + i * 20 + ")";
+                                });
 
-                            svg.append("g")
-                                .attr("class", "y axis")
-                                .call(yAxis)
-                                .append("text")
-                                .attr("transform", "rotate(-90)")
-                                .attr("y", 6)
-                                .attr("dy", ".71em")
+                            // draw legend colored rectangles
+                            legend.append("rect")
+                                .attr("x", width - 18)
+                                .attr("width", 18)
+                                .attr("height", 18)
+                                .style("fill", color);
+
+                            // draw legend text
+                            legend.append("text")
+                                .attr("x", width - 24)
+                                .attr("y", 9)
+                                .attr("dy", ".35em")
                                 .style("text-anchor", "end")
-                                .text("Scale");
+                                .text(function(d) {
+                                    return d;
+                                })
+                    
+
+                        svg.append("path")
+                            .datum(data)
+                            .attr("class", "line")
+                            .attr("d", line);
+
+                        svg.append("g")
+                            .attr("class", "x axis")
+                            .attr("transform", "translate(0," + height + ")")
+                            .call(xAxis)
+
+
+                        svg.append("g")
+                            .attr("class", "y axis")
+                            .call(yAxis)
+                            .append("text")
+                            .attr("transform", "rotate(-90)")
+                            .attr("y", 6)
+                            .attr("dy", ".71em")
+                            .style("text-anchor", "end")
+                            .text("Scale");
 
 
 
 
-                            //END OF RENDER TIMEOUT
-                        }, 200);
-                    }
-                });
+                        //END OF RENDER TIMEOUT
+                    }, 200);
             }
-        }
-    }
+        });
+}
+}
+}
 ])
 
 
