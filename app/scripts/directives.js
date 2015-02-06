@@ -172,7 +172,7 @@ angular.module('Moodtracker.directives', ['d3'])
 
                             if (data) {
                                 scope.$evalAsync(function(scope) {
-                                    var parseDate = d3.time.format("%e %b %Y").parse;
+                                    var parseDate = d3.time.format.utc("%Y-%m-%dT%H:%M:%S.%LZ").parse;
                                     data.forEach(function(d, i) {
                                         d.date = parseDate(d.date);
                                         d.scale = +d.scale;
