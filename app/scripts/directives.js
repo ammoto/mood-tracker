@@ -172,7 +172,7 @@ angular.module('Moodtracker.directives', ['d3'])
 
                             if (data) {
                                 scope.$evalAsync(function(scope) {
-                                    var parseDate = d3.time.format.utc("%Y-%m-%dT%H:%M:%S.%LZ").parse;
+                                    var parseDate = d3.time.format.utc("%a, %d %b %Y %X GMT").parse;
                                     data.forEach(function(d, i) {
                                         d.date = parseDate(d.date);
                                         d.scale = +d.scale;
@@ -184,9 +184,9 @@ angular.module('Moodtracker.directives', ['d3'])
                             svg.attr("width", width + margin.left + margin.right + 'px');
                             // Beginning of pasted code
                             var x = d3.time.scale()
-                                .range([0, width]);
+                                .range([margin.left, width - margin.right]);
                             var y = d3.scale.linear()
-                                .range([height, 0]);
+                                .range([height - margin.bottom, margin.top]);
                             var xAxis = d3.svg.axis()
                                 .scale(x)
                                 .orient("bottom");

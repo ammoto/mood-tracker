@@ -235,12 +235,11 @@ angular.module('Moodtracker.controllers', [])
 
         $scope.$evalAsync(function($scope) {
             $scope.data = $scope.rawdata.map(function(e) {
-                var date = e["date"].toISOString();
-                console.log('e.date in controller is:', e.date);
-
+              
+                console.log('e["date"] in controller is:', e["date"]);
                 return {
                     name: e["time"],
-                    date: date,
+                    date: e["date"],
                     scale: e["scale"],
                     mood: e["name"],
                     comment: e["comment"],
@@ -248,6 +247,8 @@ angular.module('Moodtracker.controllers', [])
                 };
             })
         });
+
+
 
     }
 
