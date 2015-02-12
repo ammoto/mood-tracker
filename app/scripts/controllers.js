@@ -236,7 +236,7 @@ angular.module('Moodtracker.controllers', [])
         $scope.$evalAsync(function($scope) {
             $scope.data = $scope.rawdata.map(function(e) {
               
-                console.log('e["date"] in controller is:', e["date"]);
+                // console.log('e["date"] in controller is:', e["date"]);
                 return {
                     name: e["time"],
                     date: e["date"],
