@@ -6,7 +6,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('Moodtracker', ['ionic', 'config', 'firebase', 'd3', 'ui.router', 'uiGmapgoogle-maps', 'timer', 'Moodtracker.controllers', 'Moodtracker.services', 'Moodtracker.directives'])
+angular.module('Moodtracker', ['ionic', 'config', 'firebase', 'n3-line-chart','d3', 'ui.router', 'uiGmapgoogle-maps', 'timer', 'Moodtracker.controllers', 'Moodtracker.services', 'Moodtracker.directives'])
 
 .run(function($ionicPlatform, $rootScope) {
         // rootscope variables

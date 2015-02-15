@@ -33,14 +33,14 @@ angular.module('Moodtracker.controllers', [])
             }, 2);
         }
 
-        console.log('AT PAGE LOAD rootscope.timerrunning is ', $rootScope.timerRunning);
-        console.log('AT PAGE LOAD countdown.num is ', $rootScope.countdown.num);
+        // console.log('AT PAGE LOAD rootscope.timerrunning is ', $rootScope.timerRunning);
+        // console.log('AT PAGE LOAD countdown.num is ', $rootScope.countdown.num);
 
         $scope.startTimer = function() {
             $rootScope.countdown.num = ($rootScope.minute.num * 60) + ($rootScope.hour.num * 3600) + $rootScope.second.num;
 
             $timeout(function() {
-                console.log('AT START TRACKING, countdown.num is ', $rootScope.countdown.num)
+
                 $scope.$broadcast('timer-start');
                 $rootScope.timerRunning = true;
             }, 0);
@@ -113,10 +113,23 @@ angular.module('Moodtracker.controllers', [])
 
     })
     // MOOD ENTRY
-    .controller('MoodEntryCtrl', function($scope, $firebase, $state, $ionicLoading, LocationService, speak, $rootScope) {
-        console.log('root autotweet is ', $rootScope.auto);
+    .controller('MoodEntryCtrl', function($scope, $timeout, $firebase, $state, $ionicLoading, LocationService, speak, $rootScope) {
+
         var sync = $firebase(new Firebase("https://mood-track.firebaseio.com/Moods"));
-        speak('How are you feeling right now?');
+        $scope.data = sync.$asArray();
+
+        // speak('How are you feeling right now?');
+        $timeout(function() {
+            $scope.date = {
+                today: new Date().toUTCString()
+            };
+        }, 10);
+
+
+        $scope.date = {
+            today: new Date()
+        };
+
         $scope.name = {
             text: null
         };
@@ -133,34 +146,33 @@ angular.module('Moodtracker.controllers', [])
             latLong: null
         }
 
-        $scope.date.today = new Date().toISOString();
 
-           
+
         $scope.saveMood = function() {
 
             if ($scope.name.text === '') {
                 return;
             }
 
-             if ($rootScope.auto.checked === true) {
-                console.log('autotweeting...')
+            if ($rootScope.auto.checked === true) {
+                console.log('autotweet on...')
             }
 
-      
-
-
+            var array = $scope.date.today.split(' ');
+            var date = array[1] + ' ' + array[2] + ' ' + array[3];
+            var time = array[4];
 
             LocationService.getLatLong().then(
                 function(latLong) {
                     $scope.location.latLong = latLong;
-                    console.log('LatLong=');
-                    console.log($scope.location.latLong);
+
                     //Save to firebase
                     sync.$push({
                         name: $scope.name.text,
                         scale: $scope.scale.num,
                         comment: $scope.comment.text,
                         date: $scope.date.today,
+                        time: time,
                         latLong: $scope.location.latLong
                     });
                     $state.go('tab.dash');
@@ -184,14 +196,17 @@ angular.module('Moodtracker.controllers', [])
     $scope.rawdata = sync.$asArray();
     $scope.data = [];
 
-    //RETRIEVE MOOD DATA FOR TODAY
-    $scope.getTodayData = function() {
-        var today = new Date().toISOString();
-        today = today.substring(0, today.indexOf('T'));
-        $scope.data = $scope.rawdata.map(function(e) {
-            var edate = e["date"].substring(0, e["date"].indexOf('T'));
-            var time = e["date"].split("T").pop().substring(0, 8);
-            if (edate === today) {
+    $scope.bar = false;
+    $scope.line = false;
+
+    $scope.loadBarChart = function() {
+
+        $scope.bar = true;
+        $scope.line = false;
+        $scope.$evalAsync(function($scope) {
+
+            $scope.data = $scope.rawdata.map(function(e) {
+
                 if (e["name"] === "Happy") {
                     var color = '#F4FA58';
                 } else if (e["name"] === "Sad") {
@@ -203,46 +218,71 @@ angular.module('Moodtracker.controllers', [])
                 }
 
                 return {
-                    name: time,
-                    date: today,
-                    score: parseInt(e["scale"]),
-                    mood: e["name"],
+                    name: e["time"],
                     color: color,
+                    date: e["date"],
+                    scale: e["scale"],
+                    mood: e["name"],
                     comment: e["comment"],
                     latLong: e["latLong"]
                 };
-            }
-        })
+            })
+        });
+
+        // var today = new Date().toUTCString();
+        // // today = today.substring(0, today.indexOf('T'));
+        // $scope.data = $scope.rawdata.map(function(e) {
+        //     var date = new Date().toUTCString();
+        //     var array = date.split(' ');
+        //     var today = array[1] + ' ' + array[2] + ' ' + array[3];
+
+
+        //     if (e["date"] === today) {
+        //         if (e["name"] === "Happy") {
+        //             var color = '#F4FA58';
+        //         } else if (e["name"] === "Sad") {
+        //             var color = '#81DAF5';
+        //         } else if (e["name"] === "Stressed") {
+        //             var color = '#FA5858';
+        //         } else if (e["name"] === "Neutral") {
+        //             var color = '#81F781';
+        //         }
+
+        //         return {
+        //             name: e["time"],
+        //             date: e["date"],
+        //             scale: parseInt(e["scale"]),
+        //             mood: e["name"],
+        //             color: color,
+        //             comment: e["comment"],
+        //             latLong: e["latLong"]
+        //         };
+        //     }
+        // })
+
+
     }
 
     //RETRIEVE OVERALL MOOD DATA 
-    $scope.getOverallData = function() {
-        var today = new Date().toISOString();
-        today = today.substring(0, today.indexOf('T'));
-        $scope.data2 = $scope.rawdata.map(function(e) {
-            var edate = e["date"].substring(0, e["date"].indexOf('T'));
-            var time = e["date"].split("T").pop().substring(0, 8);
-            if (edate === today) {
-                if (e["name"] === "Happy") {
-                    var color = '#F4FA58';
-                } else if (e["name"] === "Sad") {
-                    var color = '#81DAF5';
-                } else if (e["name"] === "Stressed") {
-                    var color = '#FA5858';
-                } else if (e["name"] === "Neutral") {
-                    var color = '#81F781';
-                }
+    $scope.loadLineChart = function() {
+        $scope.line = true;
+        $scope.bar = false;
+        $scope.$evalAsync(function($scope) {
+            $scope.data = $scope.rawdata.map(function(e) {
 
                 return {
-                    date: edate,
-                    time: time,
-                    score: parseInt(e["scale"]),
+                    name: e["time"],
+                    date: e["date"],
+                    scale: e["scale"],
                     mood: e["name"],
-                    color: color,
-                    comment: e["comment"]
+                    comment: e["comment"],
+                    latLong: e["latLong"]
                 };
-            }
-        })
+            })
+        });
+
+
+
     }
 
     //MODAL SETUP

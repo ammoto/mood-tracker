@@ -16,7 +16,7 @@
 }
 
 .x.axis path {
-  display: none;
+  /*display: none;*/
 }
 
 #map {
@@ -26,6 +26,10 @@
 
 .scroll {
   height: 100%;
+}
+
+d3-line svg {
+height: 500px;
 }
 
 .angular-google-map-container { height: 400px; }
@@ -45,7 +49,26 @@
   border-radius: 4px;
 }
 
-.scroll-content {
+/*.scroll-content {
     background: url('/image');
 
-  }
+  }*/
+
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.dot {
+  stroke: #000;
+}
