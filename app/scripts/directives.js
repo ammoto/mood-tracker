@@ -207,6 +207,16 @@ angular.module('Moodtracker.directives', ['d3'])
                                     return innery(y(d.scale));
                                 })
 
+                             // Interpolation function 
+                            function pathTween() {
+                                var interpolate = d3.scale.quantile()
+                                    .domain([0, 1])
+                                    .range(d3.range(1, data.length + 1));
+                                return function(t) {
+                                    return line(data.slice(0, interpolate(t)));
+                                };
+                            }
+
 
                             x.domain(d3.extent(data, function(d) {
                                 return d.date;
@@ -215,7 +225,17 @@ angular.module('Moodtracker.directives', ['d3'])
                                 return d.scale;
                             }));
 
-                            // setup fill color
+
+                              //draw line
+                            svg.append("path")
+                                .datum(data)
+                                .attr("class", "line")
+                                .attr("d", line)
+                                .transition()
+                                .duration(2000)
+                                .attrTween('d', pathTween);
+
+                            // setup dot fill color
                             var cValue = function(d) {
                                     return d.mood;
                                 },
@@ -250,6 +270,8 @@ angular.module('Moodtracker.directives', ['d3'])
                                         .style("opacity", 0);
                                 })
 
+                                
+
 
                             // draw legend
                             var legend = svg.selectAll(".legend")
@@ -277,23 +299,8 @@ angular.module('Moodtracker.directives', ['d3'])
                                     return d;
                                 })
 
-                            // Interpolation function 
-                            function pathTween() {
-                                var interpolate = d3.scale.quantile()
-                                    .domain([0, 1])
-                                    .range(d3.range(1, data.length + 1));
-                                return function(t) {
-                                    return line(data.slice(0, interpolate(t)));
-                                };
-                            }
+                           
 
-                            svg.append("path")
-                                .datum(data)
-                                .attr("class", "line")
-                                .attr("d", line)
-                                .transition()
-                                .duration(5000)
-                                .attrTween('d', pathTween);
 
 
 
