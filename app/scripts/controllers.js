@@ -195,6 +195,7 @@ angular.module('Moodtracker.controllers', [])
     var sync = $firebase(new Firebase("https://mood-track.firebaseio.com/Moods"));
     $scope.rawdata = sync.$asArray();
     $scope.data = [];
+
     $scope.bar = false;
     $scope.line = false;
 
