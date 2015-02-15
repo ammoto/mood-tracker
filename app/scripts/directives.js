@@ -184,11 +184,11 @@ angular.module('Moodtracker.directives', ['d3'])
                             svg.attr("width", width + margin.left + margin.right + 'px');
                             // Beginning of pasted code
                             var innerx = d3.scale.linear()
-                            .domain([0, width - margin.right])
-                            .range([20, width - margin.right]);
-                             var innery = d3.scale.linear()
-                            .domain([height, margin.top])
-                            .range([height-20, margin.top]);
+                                .domain([0, width - margin.right])
+                                .range([20, width - margin.right]);
+                            var innery = d3.scale.linear()
+                                .domain([height, margin.top])
+                                .range([height - 20, margin.top]);
                             var x = d3.time.scale()
                                 .range([0, width - margin.right]);
                             var y = d3.scale.linear()
@@ -201,16 +201,12 @@ angular.module('Moodtracker.directives', ['d3'])
                                 .orient("left");
                             var line = d3.svg.line()
                                 .x(function(d) {
-                                    return innerx(x(d.date ));
+                                    return innerx(x(d.date));
                                 })
                                 .y(function(d) {
-                                    return innery(y(d.scale ));
+                                    return innery(y(d.scale));
                                 })
 
-
-                            // TODO: don't want dots overlapping axis, so add in buffer to data domain
-                            // xAxis.domain([d3.min(data, x) - 1, d3.max(data, x) + 1]);
-                            // yAxis.domain([d3.min(data, y) - 1, d3.max(data, y) + 1]);
 
                             x.domain(d3.extent(data, function(d) {
                                 return d.date;
@@ -232,10 +228,10 @@ angular.module('Moodtracker.directives', ['d3'])
                                 .attr("class", "dot")
                                 .attr("r", 9)
                                 .attr("cx", function(d) {
-                                    return x(d.date);
+                                    return innerx(x(d.date));
                                 })
                                 .attr("cy", function(d) {
-                                    return y(d.scale);
+                                    return innery(y(d.scale));
                                 })
                                 .style("fill", function(d) {
                                     return color(cValue(d));
@@ -253,8 +249,6 @@ angular.module('Moodtracker.directives', ['d3'])
                                         .duration(500)
                                         .style("opacity", 0);
                                 })
-
-
 
 
                             // draw legend
@@ -283,10 +277,24 @@ angular.module('Moodtracker.directives', ['d3'])
                                     return d;
                                 })
 
+                            // Interpolation function 
+                            function pathTween() {
+                                var interpolate = d3.scale.quantile()
+                                    .domain([0, 1])
+                                    .range(d3.range(1, data.length + 1));
+                                return function(t) {
+                                    return line(data.slice(0, interpolate(t)));
+                                };
+                            }
+
                             svg.append("path")
                                 .datum(data)
                                 .attr("class", "line")
                                 .attr("d", line)
+                                .transition()
+                                .duration(5000)
+                                .attrTween('d', pathTween);
+
 
 
                             svg.append("g")
