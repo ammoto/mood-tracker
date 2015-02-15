@@ -2,41 +2,33 @@
     <ion-content class="has-header padding">
         <h1>Mood Tracker</h1>
         <div class="bar bar-header bar-calm">
-            <h1 class="title">Data Chart AA</h1>
+            <h1 class="title">Data Chart</h1>
         </div>
         <center>
-        <button class="button button-positive" ng-click='getTodayData()'>
-            Today
-        </button>
-        <button class="button button-positive" ng-click='getOverallData()'>
-            Overall Mood Data
-        </button>
-          </center>
-        
+
+<!-- <h3>Raw Data</h3> {{rawdata}}
+<h3>Scope Data</h3> {{data}} -->
+
+            <button class="button button-positive" ng-click='loadBarChart()'>
+                Bar Chart
+            </button>
+            <button class="button button-positive" ng-click='loadLineChart()'>
+                Line Chart
+            </button>
+        </center>
+
+
+        <div ng-if='line'>
             <div d3-line data='data'></div>
-
-
-              <!-- <linechart data="ldata" options="options" mode="" width="" height=""></linechart> -->
-
-<!-- 
-             <nvd3-line-chart
-        data='nvdata'
-        showXAxis="true"
-        showYAxis="true"
-        tooltips="true"
-        interactive="true">
-    </nvd3-line-chart>
- -->
-<br/>
-<br>
-<h3>Raw Data</h3>
-{{rawdata}}
-<h3>Scope Data</h3>
-{{data}}
-
-        <div d3-bars data='data' on-click="onClick(item)" bar-height="22" bar-padding="10">
         </div>
-    
+
+ 
+
+        <div ng-if='bar'>
+            <div d3-bars data='data' on-click="onClick(item)" bar-height="22" bar-padding="10">
+            </div>
+        </div>
+
 
         <!-- DETAIL MODAL -->
         <script id="my-modal.html" type="text/ng-template">
@@ -49,13 +41,16 @@
                         <h1 class="title">Your Mood was: {{detailMood}}  </h1>
                     </ion-header-bar>
                     <ion-content>
-                        <div class="item item-text-wrap"> 
-                                                   <strong>Date: </strong> {{detailDate}}<br>
-                                                     <strong>   Time: </strong> {{detailTime}}<br>
-                                                      <strong>  Comment:  </strong>{{detailComment}}  <br>
+                        <div class="item item-text-wrap">
+                            <strong>Date: </strong> {{detailDate}}
+                            <br>
+                            <strong>   Time: </strong> {{detailTime}}
+                            <br>
+                            <strong>  Comment:  </strong>{{detailComment}}
+                            <br>
                             <div id="map-canvas">
                                 <ui-gmap-google-map center="map.center" zoom="map.zoom">
-                                    <ui-gmap-marker coords="marker.coords"  idkey="marker.id">
+                                    <ui-gmap-marker coords="marker.coords" idkey="marker.id">
                                     </ui-gmap-marker>
                                 </ui-gmap-google-map>
                             </div>
@@ -68,7 +63,7 @@
         </script>
 
 
-      
+
 
 
 

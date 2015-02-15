@@ -120,11 +120,11 @@ angular.module('Moodtracker.controllers', [])
 
         // speak('How are you feeling right now?');
         $timeout(function() {
-         $scope.date = {
-            today: new Date().toUTCString()
-        };
-    }, 10);
-        
+            $scope.date = {
+                today: new Date().toUTCString()
+            };
+        }, 10);
+
 
         $scope.date = {
             today: new Date()
@@ -195,48 +195,80 @@ angular.module('Moodtracker.controllers', [])
     var sync = $firebase(new Firebase("https://mood-track.firebaseio.com/Moods"));
     $scope.rawdata = sync.$asArray();
     $scope.data = [];
+    $scope.bar = false;
+    $scope.line = false;
 
-    //RETRIEVE MOOD DATA FOR TODAY
-    // $scope.getTodayData = function() {
-    //     var today = new Date().toUTCString();
-    //     // today = today.substring(0, today.indexOf('T'));
-    //     $scope.data = $scope.rawdata.map(function(e) {
-    //         var date = new Date().toUTCString();
-    //         var array = date.split(' ');
-    //         var today = array[1] + ' ' + array[2] + ' ' + array[3];
+    $scope.loadBarChart = function() {
+
+        $scope.bar = true;
+        $scope.line = false;
+        $scope.$evalAsync(function($scope) {
+
+            $scope.data = $scope.rawdata.map(function(e) {
+
+                if (e["name"] === "Happy") {
+                    var color = '#F4FA58';
+                } else if (e["name"] === "Sad") {
+                    var color = '#81DAF5';
+                } else if (e["name"] === "Stressed") {
+                    var color = '#FA5858';
+                } else if (e["name"] === "Neutral") {
+                    var color = '#81F781';
+                }
+
+                return {
+                    name: e["time"],
+                    color: color,
+                    date: e["date"],
+                    scale: e["scale"],
+                    mood: e["name"],
+                    comment: e["comment"],
+                    latLong: e["latLong"]
+                };
+            })
+        });
+
+        // var today = new Date().toUTCString();
+        // // today = today.substring(0, today.indexOf('T'));
+        // $scope.data = $scope.rawdata.map(function(e) {
+        //     var date = new Date().toUTCString();
+        //     var array = date.split(' ');
+        //     var today = array[1] + ' ' + array[2] + ' ' + array[3];
 
 
-    //         if (e["date"] === today) {
-    //             if (e["name"] === "Happy") {
-    //                 var color = '#F4FA58';
-    //             } else if (e["name"] === "Sad") {
-    //                 var color = '#81DAF5';
-    //             } else if (e["name"] === "Stressed") {
-    //                 var color = '#FA5858';
-    //             } else if (e["name"] === "Neutral") {
-    //                 var color = '#81F781';
-    //             }
+        //     if (e["date"] === today) {
+        //         if (e["name"] === "Happy") {
+        //             var color = '#F4FA58';
+        //         } else if (e["name"] === "Sad") {
+        //             var color = '#81DAF5';
+        //         } else if (e["name"] === "Stressed") {
+        //             var color = '#FA5858';
+        //         } else if (e["name"] === "Neutral") {
+        //             var color = '#81F781';
+        //         }
 
-    //             return {
-    //                 name: e["time"],
-    //                 date: e["date"],
-    //                 scale: parseInt(e["scale"]),
-    //                 mood: e["name"],
-    //                 color: color,
-    //                 comment: e["comment"],
-    //                 latLong: e["latLong"]
-    //             };
-    //         }
-    //     })
-    // }
+        //         return {
+        //             name: e["time"],
+        //             date: e["date"],
+        //             scale: parseInt(e["scale"]),
+        //             mood: e["name"],
+        //             color: color,
+        //             comment: e["comment"],
+        //             latLong: e["latLong"]
+        //         };
+        //     }
+        // })
+
+
+    }
 
     //RETRIEVE OVERALL MOOD DATA 
-    $scope.getOverallData = function() {
-
+    $scope.loadLineChart = function() {
+        $scope.line = true;
+        $scope.bar = false;
         $scope.$evalAsync(function($scope) {
             $scope.data = $scope.rawdata.map(function(e) {
-              
-                // console.log('e["date"] in controller is:', e["date"]);
+
                 return {
                     name: e["time"],
                     date: e["date"],
