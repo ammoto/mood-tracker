@@ -159,8 +159,6 @@ angular.module('Moodtracker.directives', ['d3'])
 
                     }, true);
 
-
-
                     scope.render = function(data) {
                         svg.selectAll('*').remove();
 
@@ -169,20 +167,19 @@ angular.module('Moodtracker.directives', ['d3'])
 
                         renderTimeout = $timeout(function() {
 
-
                             if (data) {
                                 scope.$evalAsync(function(scope) {
                                     var parseDate = d3.time.format.utc("%a, %d %b %Y %X GMT").parse;
                                     data.forEach(function(d, i) {
                                         d.date = parseDate(d.date);
                                         d.scale = +d.scale;
-                                        console.log('d in directive at index', i, ' is ....', d.date)
+                                        // console.log('d in directive at index', i, ' is ....', d.date)
                                     });
                                 })
                             }
                             width = d3.select(ele[0])[0][0].offsetWidth - margin.left - margin.right;
                             svg.attr("width", width + margin.left + margin.right + 'px');
-                            // Beginning of pasted code
+                           
                             var innerx = d3.scale.linear()
                                 .domain([0, width - margin.right])
                                 .range([20, width - margin.right]);
@@ -207,7 +204,7 @@ angular.module('Moodtracker.directives', ['d3'])
                                     return innery(y(d.scale));
                                 })
 
-                             // Interpolation function 
+                            // Interpolation function 
                             function pathTween() {
                                 var interpolate = d3.scale.quantile()
                                     .domain([0, 1])
@@ -225,14 +222,14 @@ angular.module('Moodtracker.directives', ['d3'])
                                 return d.scale;
                             }));
 
-
-                              //draw line
+                             //draw line
                             svg.append("path")
                                 .datum(data)
                                 .attr("class", "line")
                                 .attr("d", line)
+                                .style("z-index", 0)
                                 .transition()
-                                .duration(2000)
+                                .duration(3000)
                                 .attrTween('d', pathTween);
 
                             // setup dot fill color
@@ -245,7 +242,7 @@ angular.module('Moodtracker.directives', ['d3'])
                             svg.selectAll(".dot")
                                 .data(data)
                                 .enter().append("circle")
-                                .attr("class", "dot")
+                            .attr("class", "dot")
                                 .attr("r", 9)
                                 .attr("cx", function(d) {
                                     return innerx(x(d.date));
@@ -259,7 +256,7 @@ angular.module('Moodtracker.directives', ['d3'])
                                 .on("mouseover", function(d) {
                                     tooltip.transition()
                                         .duration(200)
-                                        .style("opacity", .9);
+                                        .style("opacity", 0.9);
                                     tooltip.html(d.mood + "<br/> (" + x(d) + ", " + y(d) + ")")
                                         .style("left", (d3.event.pageX + 5) + "px")
                                         .style("top", (d3.event.pageY - 28) + "px");
@@ -270,7 +267,11 @@ angular.module('Moodtracker.directives', ['d3'])
                                         .style("opacity", 0);
                                 })
 
-                                
+                            var t0 = svg.transition().duration(1000);
+                            t0.selectAll(".dot").attr("r", 15).style("z-index", 500);
+
+
+                           
 
 
                             // draw legend
@@ -299,7 +300,7 @@ angular.module('Moodtracker.directives', ['d3'])
                                     return d;
                                 })
 
-                           
+
 
 
 

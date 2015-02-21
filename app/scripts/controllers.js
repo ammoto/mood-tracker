@@ -51,7 +51,7 @@ angular.module('Moodtracker.controllers', [])
         $scope.stopTimer = function() {
             $rootScope.countdown.num = 0;
             $timeout(function() {
-                console.log('AT STOP TRACKING countdown.num is ', $rootScope.countdown.num)
+                // console.log('AT STOP TRACKING countdown.num is ', $rootScope.countdown.num)
                 $scope.$broadcast('timer-stop');
                 $rootScope.timerRunning = false;
                 $scope.$apply();
@@ -61,17 +61,17 @@ angular.module('Moodtracker.controllers', [])
         };
 
         $scope.$on('timer-stopped', function(event, data) {
-            console.log('Timer Stopped ');
+            // console.log('Timer Stopped ');
         });
 
         $scope.callbackTimer = function() {
             // var element = document.querySelector('#speaker');
             // element.speak();
-            console.log('Timer finished!')
+            // console.log('Timer finished!')
             $timeout(function() {
                 $rootScope.countdown.num = ($rootScope.minute.num * 60) + ($rootScope.hour.num * 3600) + $rootScope.second.num;
                 $scope.$apply();
-                console.log('AT TIMER CALLBACK countdown.num is ', $rootScope.countdown.num);
+                // console.log('AT TIMER CALLBACK countdown.num is ', $rootScope.countdown.num);
                 $state.go('tab.moodentry');
             }, 0);
 
@@ -155,7 +155,7 @@ angular.module('Moodtracker.controllers', [])
             }
 
             if ($rootScope.auto.checked === true) {
-                console.log('autotweet on...')
+                // console.log('autotweet on...')
             }
 
             var array = $scope.date.today.split(' ');
@@ -290,7 +290,7 @@ angular.module('Moodtracker.controllers', [])
         scope: $scope,
         animation: 'slide-in-up'
     }).then(function(modal) {
-        console.log('modal loaded')
+        // console.log('modal loaded')
         $scope.modal = modal;
     });
     $scope.openModal = function() {
@@ -311,10 +311,6 @@ angular.module('Moodtracker.controllers', [])
     $scope.$on('modal.removed', function() {
         // Execute action
     });
-
-
-
-
 
     //ONCLICK FUNCTION
     $scope.onClick = function(item) {
@@ -350,8 +346,6 @@ angular.module('Moodtracker.controllers', [])
 
         });
     };
-
-
 
 })
 
